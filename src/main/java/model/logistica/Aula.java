@@ -2,9 +2,17 @@ package model.logistica;
 
 public class Aula {
 
-    private String nomeAula;
+    private final String nomeAula;
 
     public Aula(String nomeAula) {
+
+        if (nomeAula == null || nomeAula.trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Il nome dell'aula non può essere vuoto."
+            );
+        }
+
         this.nomeAula = nomeAula;
     }
 
@@ -12,12 +20,11 @@ public class Aula {
         return nomeAula;
     }
 
-    public void setNomeAula(String nomeAula) {
-        this.nomeAula = nomeAula;
-    }
-
     @Override
     public String toString() {
-        return "Aula: " + nomeAula;
+
+        return "Aula{" +
+                "nomeAula='" + nomeAula + '\'' +
+                '}';
     }
 }

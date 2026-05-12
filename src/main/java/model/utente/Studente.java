@@ -1,23 +1,38 @@
 package model.utente;
-import model.didattica.*;
+
+import model.didattica.AnnoCorso;
 
 public class Studente extends Utente {
 
     private String matricola;
     private AnnoCorso annoCorso;
 
-    public Studente(String nome, String cognome, String email, String login,
-                    String password, String matricola, AnnoCorso annoCorso) {
+    // Costruttore
+    public Studente(String nome,
+                    String cognome,
+                    String email,
+                    String login,
+                    String password,
+                    String matricola,
+                    AnnoCorso annoCorso) {
+
         super(nome, cognome, email, login, password);
+
         this.matricola = matricola;
         this.annoCorso = annoCorso;
     }
 
+    // Override del metodo astratto
     @Override
     public void visualizzaOrario() {
-        System.out.println("Visualizzazione orario dello studente " + getNome());
+
+        System.out.println("Visualizzazione orario dello studente: "
+                + getNome() + " " + getCognome());
+
+        System.out.println("Anno di corso: " + annoCorso);
     }
 
+    // Getter
     public String getMatricola() {
         return matricola;
     }
@@ -26,7 +41,23 @@ public class Studente extends Utente {
         return annoCorso;
     }
 
+    // Setter
     public void setAnnoCorso(AnnoCorso annoCorso) {
-        this.annoCorso = annoCorso;
+
+        if(annoCorso != null) {
+            this.annoCorso = annoCorso;
+        }
+    }
+
+    // toString
+    @Override
+    public String toString() {
+
+        return "Studente{" +
+                "nome='" + getNome() + '\'' +
+                ", cognome='" + getCognome() + '\'' +
+                ", matricola='" + matricola + '\'' +
+                ", annoCorso=" + annoCorso +
+                '}';
     }
 }

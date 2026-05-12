@@ -8,7 +8,9 @@ public abstract class Utente {
     private String login;
     private String password;
 
-    public Utente(String nome, String cognome, String email, String login, String password) {
+    public Utente(String nome, String cognome,
+                  String email, String login, String password) {
+
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
@@ -18,6 +20,11 @@ public abstract class Utente {
 
     public void registrazione() {
         System.out.println("Utente registrato correttamente.");
+    }
+
+    public boolean login(String login, String password) {
+        return this.login.equals(login)
+                && this.password.equals(password);
     }
 
     public abstract void visualizzaOrario();
@@ -44,5 +51,10 @@ public abstract class Utente {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " " + cognome;
     }
 }
