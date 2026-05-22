@@ -1,5 +1,7 @@
 package model.didattica;
 
+import model.utente.Docente;
+
 import java.util.Objects;
 
 public class Insegnamento {
@@ -10,10 +12,22 @@ public class Insegnamento {
 
     private final AnnoCorso annoCorso;
 
-    // Costruttore
-    public Insegnamento(String nomeInsegnamento,
-                        int cfu,
-                        AnnoCorso annoCorso) {
+    // =====================================================
+    // NUOVO CAMPO
+    // =====================================================
+
+    private final Docente docenteTitolare;
+
+    // =====================================================
+    // COSTRUTTORE
+    // =====================================================
+
+    public Insegnamento(
+            String nomeInsegnamento,
+            int cfu,
+            AnnoCorso annoCorso,
+            Docente docenteTitolare
+    ) {
 
         if (nomeInsegnamento == null
                 || nomeInsegnamento.trim().isEmpty()) {
@@ -37,44 +51,72 @@ public class Insegnamento {
             );
         }
 
-        this.nomeInsegnamento = nomeInsegnamento;
+        if (docenteTitolare == null) {
+
+            throw new IllegalArgumentException(
+                    "Il docente titolare non può essere nullo."
+            );
+        }
+
+        this.nomeInsegnamento =
+                nomeInsegnamento;
+
         this.cfu = cfu;
+
         this.annoCorso = annoCorso;
+
+        this.docenteTitolare =
+                docenteTitolare;
     }
 
-    // Getter
+    // =====================================================
+    // GETTER
+    // =====================================================
+
     public String getNomeInsegnamento() {
+
         return nomeInsegnamento;
     }
 
     public int getCfu() {
+
         return cfu;
     }
 
     public AnnoCorso getAnnoCorso() {
+
         return annoCorso;
     }
 
-    // toString
+    public Docente getDocenteTitolare() {
+
+        return docenteTitolare;
+    }
+
+    // =====================================================
+    // TOSTRING
+    // =====================================================
+
     @Override
     public String toString() {
 
-        return "Insegnamento{" +
-                "nomeInsegnamento='" + nomeInsegnamento + '\'' +
-                ", cfu=" + cfu +
-                ", annoCorso=" + annoCorso +
-                '}';
+        return nomeInsegnamento;
     }
 
-    // equals
+    // =====================================================
+    // EQUALS
+    // =====================================================
+
     @Override
     public boolean equals(Object obj) {
 
         if (this == obj) {
+
             return true;
         }
 
         if (!(obj instanceof Insegnamento)) {
+
             return false;
         }
 
@@ -87,10 +129,15 @@ public class Insegnamento {
         );
     }
 
-    // hashCode
+    // =====================================================
+    // HASHCODE
+    // =====================================================
+
     @Override
     public int hashCode() {
 
-        return Objects.hash(nomeInsegnamento);
+        return Objects.hash(
+                nomeInsegnamento
+        );
     }
 }

@@ -1,6 +1,7 @@
 package model.richiesta;
 
 import model.didattica.Giorno;
+import model.utente.Docente;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,23 +9,42 @@ import java.util.Objects;
 
 public class RichiestaSpostamento {
 
+    // =====================================================
+    // ATTRIBUTI
+    // =====================================================
+
     private final String motivazione;
 
     private StatoRichiesta stato;
 
     private final LocalDate dataRichiesta;
 
-    // Dati attuali della lezione
+    private Docente docente;
+
+    // =====================================================
+    // DATI ATTUALI LEZIONE
+    // =====================================================
+
     private final Giorno giornoAttuale;
+
     private final LocalTime oraInizioAttuale;
+
     private final LocalTime oraFineAttuale;
 
-    // Nuova proposta
+    // =====================================================
+    // NUOVA PROPOSTA
+    // =====================================================
+
     private final Giorno giornoProposto;
+
     private final LocalTime oraInizioProposta;
+
     private final LocalTime oraFineProposta;
 
-    // Costruttore
+    // =====================================================
+    // COSTRUTTORE
+    // =====================================================
+
     public RichiestaSpostamento(
             String motivazione,
             Giorno giornoAttuale,
@@ -43,72 +63,156 @@ public class RichiestaSpostamento {
             );
         }
 
-        this.motivazione = motivazione;
+        if (giornoAttuale == null
+                || giornoProposto == null) {
 
-        this.giornoAttuale = giornoAttuale;
-        this.oraInizioAttuale = oraInizioAttuale;
-        this.oraFineAttuale = oraFineAttuale;
+            throw new IllegalArgumentException(
+                    "I giorni non possono essere nulli."
+            );
+        }
 
-        this.giornoProposto = giornoProposto;
-        this.oraInizioProposta = oraInizioProposta;
-        this.oraFineProposta = oraFineProposta;
+        if (oraInizioAttuale == null
+                || oraFineAttuale == null
+                || oraInizioProposta == null
+                || oraFineProposta == null) {
 
-        this.stato = StatoRichiesta.IN_ATTESA;
+            throw new IllegalArgumentException(
+                    "Gli orari non possono essere nulli."
+            );
+        }
 
-        this.dataRichiesta = LocalDate.now();
+        if (!oraFineAttuale.isAfter(
+                oraInizioAttuale)) {
+
+            throw new IllegalArgumentException(
+                    "L'orario attuale non è valido."
+            );
+        }
+
+        if (!oraFineProposta.isAfter(
+                oraInizioProposta)) {
+
+            throw new IllegalArgumentException(
+                    "L'orario proposto non è valido."
+            );
+        }
+
+        this.motivazione =
+                motivazione;
+
+        this.giornoAttuale =
+                giornoAttuale;
+
+        this.oraInizioAttuale =
+                oraInizioAttuale;
+
+        this.oraFineAttuale =
+                oraFineAttuale;
+
+        this.giornoProposto =
+                giornoProposto;
+
+        this.oraInizioProposta =
+                oraInizioProposta;
+
+        this.oraFineProposta =
+                oraFineProposta;
+
+        this.stato =
+                StatoRichiesta.IN_ATTESA;
+
+        this.dataRichiesta =
+                LocalDate.now();
     }
 
-    // Getter
+    // =====================================================
+    // GETTER
+    // =====================================================
+
     public String getMotivazione() {
+
         return motivazione;
     }
 
     public StatoRichiesta getStato() {
+
         return stato;
     }
 
     public LocalDate getDataRichiesta() {
+
         return dataRichiesta;
     }
 
+    public Docente getDocente() {
+
+        return docente;
+    }
+
     public Giorno getGiornoAttuale() {
+
         return giornoAttuale;
     }
 
     public LocalTime getOraInizioAttuale() {
+
         return oraInizioAttuale;
     }
 
     public LocalTime getOraFineAttuale() {
+
         return oraFineAttuale;
     }
 
     public Giorno getGiornoProposto() {
+
         return giornoProposto;
     }
 
     public LocalTime getOraInizioProposta() {
+
         return oraInizioProposta;
     }
 
     public LocalTime getOraFineProposta() {
+
         return oraFineProposta;
     }
 
-    // Setter stato
-    public void setStato(StatoRichiesta stato) {
+    // =====================================================
+    // SETTER
+    // =====================================================
+
+    public void setStato(
+            StatoRichiesta stato
+    ) {
 
         if (stato != null) {
+
             this.stato = stato;
         }
     }
 
-    // toString
+    public void setDocente(
+            Docente docente
+    ) {
+
+        if (docente != null) {
+
+            this.docente = docente;
+        }
+    }
+
+    // =====================================================
+    // TOSTRING
+    // =====================================================
+
     @Override
     public String toString() {
 
         return "RichiestaSpostamento{" +
-                "motivazione='" + motivazione + '\'' +
+                "docente=" + docente +
+                ", motivazione='" + motivazione + '\'' +
                 ", stato=" + stato +
                 ", dataRichiesta=" + dataRichiesta +
                 ", giornoAttuale=" + giornoAttuale +
@@ -116,15 +220,20 @@ public class RichiestaSpostamento {
                 '}';
     }
 
-    // equals
+    // =====================================================
+    // EQUALS
+    // =====================================================
+
     @Override
     public boolean equals(Object obj) {
 
         if (this == obj) {
+
             return true;
         }
 
         if (!(obj instanceof RichiestaSpostamento)) {
+
             return false;
         }
 
@@ -135,16 +244,23 @@ public class RichiestaSpostamento {
                 motivazione,
                 richiesta.motivazione
         )
-                && Objects.equals(
-                dataRichiesta,
-                richiesta.dataRichiesta
-        );
+                &&
+                Objects.equals(
+                        dataRichiesta,
+                        richiesta.dataRichiesta
+                );
     }
 
-    // hashCode
+    // =====================================================
+    // HASHCODE
+    // =====================================================
+
     @Override
     public int hashCode() {
 
-        return Objects.hash(motivazione, dataRichiesta);
+        return Objects.hash(
+                motivazione,
+                dataRichiesta
+        );
     }
 }
