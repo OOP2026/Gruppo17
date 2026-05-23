@@ -1,14 +1,33 @@
 package controller;
 
-import model.didattica.*;
+import gui.LoginFrame;
+import gui.RegisterFrame;
+
+import model.didattica.AnnoCorso;
+import model.didattica.Giorno;
+import model.didattica.Insegnamento;
+import model.didattica.Lezione;
+import model.didattica.Orario;
+
 import model.logistica.Aula;
+
 import model.richiesta.RichiestaSpostamento;
 import model.richiesta.StatoRichiesta;
-import model.utente.*;
+
+import model.utente.Docente;
+import model.utente.ResponsabileOrari;
+import model.utente.Studente;
+import model.utente.UserRole;
+import model.utente.Utente;
+
+import javax.swing.*;
 
 import java.time.LocalTime;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -19,39 +38,141 @@ public class Controller {
 	private final Orario orario;
 
 	// =====================================================
-	// SESSIONE
+	// USERS
+	// =====================================================
+
+	private final Map<String, Utente> utenti;
+
+	// =====================================================
+	// SESSION
 	// =====================================================
 
 	private Utente utenteCorrente;
 
 	// =====================================================
-	// UTENTI
+	// VIEWS
 	// =====================================================
 
-	private final List<Studente> studenti;
+	private LoginFrame loginFrame;
 
-	private final List<Docente> docenti;
-
-	private final List<ResponsabileOrari> responsabili;
+	private RegisterFrame registerFrame;
 
 	// =====================================================
-	// COSTRUTTORE
+	// CONSTRUCTOR
 	// =====================================================
 
-	public Controller(
-			Orario orario,
-			List<Studente> studenti,
-			List<Docente> docenti,
-			List<ResponsabileOrari> responsabili
+	public Controller() {
+
+		orario =
+				new Orario();
+
+		utenti =
+				new HashMap<>();
+	}
+
+	// =====================================================
+	// START APPLICATION
+	// =====================================================
+
+	public void startApplication() {
+
+		SwingUtilities.invokeLater(() -> {
+
+			initializeViews();
+
+			showLoginFrame();
+		});
+	}
+
+	// =====================================================
+	// INITIALIZE VIEWS
+	// =====================================================
+
+	private void initializeViews() {
+
+		loginFrame =
+				new LoginFrame(this);
+
+		registerFrame =
+				new RegisterFrame(this);
+	}
+
+	// =====================================================
+	// SHOW LOGIN FRAME
+	// =====================================================
+
+	public void showLoginFrame() {
+
+		SwingUtilities.invokeLater(() -> {
+
+			if (registerFrame != null) {
+
+				registerFrame.setVisible(false);
+			}
+
+			if (loginFrame != null) {
+
+				loginFrame.clearFields();
+
+				loginFrame.setLocationRelativeTo(null);
+
+				loginFrame.setVisible(true);
+			}
+		});
+	}
+
+	// =====================================================
+	// SHOW REGISTER FRAME
+	// =====================================================
+
+	public void showRegisterFrame() {
+
+		SwingUtilities.invokeLater(() -> {
+
+			if (loginFrame != null) {
+
+				loginFrame.setVisible(false);
+			}
+
+			if (registerFrame != null) {
+
+				registerFrame.clearFields();
+
+				registerFrame.setLocationRelativeTo(null);
+
+				registerFrame.setVisible(true);
+			}
+		});
+	}
+
+	// =====================================================
+	// FIND USER
+	// =====================================================
+
+	private Utente findUtenteByLogin(
+			String login
 	) {
 
-		this.orario = orario;
+		if (login == null) {
 
-		this.studenti = studenti;
+			return null;
+		}
 
-		this.docenti = docenti;
+		return utenti.get(
+				login.toLowerCase().trim()
+		);
+	}
 
-		this.responsabili = responsabili;
+	// =====================================================
+	// LOGIN EXISTS
+	// =====================================================
+
+	private boolean loginExists(
+			String login
+	) {
+
+		return findUtenteByLogin(login)
+				!= null;
 	}
 
 	// =====================================================
@@ -63,34 +184,137 @@ public class Controller {
 			String password
 	) {
 
-		for (ResponsabileOrari r : responsabili) {
+		if (login == null
+				|| password == null) {
 
-			if (r.login(login, password)) {
-
-				utenteCorrente = r;
-
-				return true;
-			}
+			return false;
 		}
 
-		for (Docente d : docenti) {
+		Utente utente =
+				findUtenteByLogin(login);
 
-			if (d.login(login, password)) {
+		if (utente != null
+				&&
+				utente.checkPassword(password)) {
 
-				utenteCorrente = d;
+			utenteCorrente = utente;
 
-				return true;
-			}
+			return true;
 		}
 
-		for (Studente s : studenti) {
+		return false;
+	}
 
-			if (s.login(login, password)) {
+	// =====================================================
+	// REGISTER
+	// =====================================================
 
-				utenteCorrente = s;
+	public boolean register(
+			String name,
+			String surname,
+			String email,
+			String login,
+			String password,
+			UserRole role,
+			String studentId,
+			AnnoCorso annoCorso
+	) {
 
-				return true;
-			}
+		// =================================================
+		// VALIDATION
+		// =================================================
+
+		if (name == null
+				|| surname == null
+				|| email == null
+				|| login == null
+				|| password == null
+				|| role == null) {
+
+			return false;
+		}
+
+		String sanitizedLogin =
+				login.toLowerCase().trim();
+
+		// =================================================
+		// LOGIN CHECK
+		// =================================================
+
+		if (loginExists(sanitizedLogin)) {
+
+			return false;
+		}
+
+		Utente nuovoUtente = null;
+
+		// =================================================
+		// STUDENT
+		// =================================================
+
+		if (role == UserRole.STUDENT) {
+
+			Studente studente =
+					new Studente(
+							name,
+							surname,
+							email,
+							sanitizedLogin,
+							password,
+							studentId
+					);
+
+			studente.setAnnoCorso(
+					annoCorso
+			);
+
+			nuovoUtente = studente;
+		}
+
+		// =================================================
+		// TEACHER
+		// =================================================
+
+		else if (role == UserRole.TEACHER) {
+
+			nuovoUtente =
+					new Docente(
+							name,
+							surname,
+							email,
+							sanitizedLogin,
+							password
+					);
+		}
+
+		// =================================================
+		// ADMIN
+		// =================================================
+
+		else if (role == UserRole.ADMIN) {
+
+			nuovoUtente =
+					new ResponsabileOrari(
+							name,
+							surname,
+							email,
+							sanitizedLogin,
+							password
+					);
+		}
+
+		// =================================================
+		// SAVE USER
+		// =================================================
+
+		if (nuovoUtente != null) {
+
+			utenti.put(
+					sanitizedLogin,
+					nuovoUtente
+			);
+
+			return true;
 		}
 
 		return false;
@@ -103,10 +327,12 @@ public class Controller {
 	public void logout() {
 
 		utenteCorrente = null;
+
+		showLoginFrame();
 	}
 
 	// =====================================================
-	// GETTER SESSIONE
+	// CURRENT USER
 	// =====================================================
 
 	public Utente getUtenteCorrente() {
@@ -114,10 +340,32 @@ public class Controller {
 		return utenteCorrente;
 	}
 
+	// =====================================================
+	// SESSION CHECK
+	// =====================================================
+
 	public boolean isLogged() {
 
 		return utenteCorrente != null;
 	}
+
+	// =====================================================
+	// CURRENT USER ROLE
+	// =====================================================
+
+	public UserRole getTargetHomeRole() {
+
+		if (utenteCorrente == null) {
+
+			return UserRole.GUEST;
+		}
+
+		return utenteCorrente.getRole();
+	}
+
+	// =====================================================
+	// CURRENT USER NAME
+	// =====================================================
 
 	public String getNomeUtenteCorrente() {
 
@@ -132,37 +380,23 @@ public class Controller {
 	}
 
 	// =====================================================
-	// RUOLI
-	// =====================================================
-
-	public boolean isStudente() {
-
-		return utenteCorrente instanceof Studente;
-	}
-
-	// ResponsabileOrari è anche Docente
-
-	public boolean isDocente() {
-
-		return utenteCorrente instanceof Docente;
-	}
-
-	public boolean isResponsabile() {
-
-		return utenteCorrente
-				instanceof ResponsabileOrari;
-	}
-
-	// =====================================================
-	// AULE
+	// CLASSROOMS
 	// =====================================================
 
 	public void aggiungiAula(
 			String nomeAula
 	) {
 
+		if (nomeAula == null
+				|| nomeAula.isBlank()) {
+
+			return;
+		}
+
 		Aula aula =
-				new Aula(nomeAula);
+				new Aula(
+						nomeAula.trim()
+				);
 
 		orario.aggiungiAula(aula);
 	}
@@ -176,20 +410,25 @@ public class Controller {
 			String nomeAula
 	) {
 
-		for (Aula aula : orario.getAule()) {
+		if (nomeAula == null) {
 
-			if (aula.getNomeAula()
-					.equalsIgnoreCase(nomeAula)) {
-
-				return aula;
-			}
+			return null;
 		}
 
-		return null;
+		return orario.getAule()
+				.stream()
+				.filter(a ->
+						a.getNomeAula()
+								.equalsIgnoreCase(
+										nomeAula.trim()
+								)
+				)
+				.findFirst()
+				.orElse(null);
 	}
 
 	// =====================================================
-	// INSEGNAMENTI
+	// SUBJECTS
 	// =====================================================
 
 	public void aggiungiInsegnamento(
@@ -222,21 +461,25 @@ public class Controller {
 			String nome
 	) {
 
-		for (Insegnamento i
-				: orario.getInsegnamenti()) {
+		if (nome == null) {
 
-			if (i.getNomeInsegnamento()
-					.equalsIgnoreCase(nome)) {
-
-				return i;
-			}
+			return null;
 		}
 
-		return null;
+		return orario.getInsegnamenti()
+				.stream()
+				.filter(i ->
+						i.getNomeInsegnamento()
+								.equalsIgnoreCase(
+										nome.trim()
+								)
+				)
+				.findFirst()
+				.orElse(null);
 	}
 
 	// =====================================================
-	// CREAZIONE LEZIONE
+	// CREATE LESSON
 	// =====================================================
 
 	public boolean creaLezione(
@@ -256,7 +499,12 @@ public class Controller {
 			return false;
 		}
 
-		// Controllo conflitto aula
+		if (oraInizio.isAfter(oraFine)
+				||
+				oraInizio.equals(oraFine)) {
+
+			return false;
+		}
 
 		if (checkConflittoAula(
 				giorno,
@@ -267,8 +515,6 @@ public class Controller {
 
 			return false;
 		}
-
-		// Controllo conflitto docente
 
 		if (checkConflittoDocente(
 				insegnamento,
@@ -295,7 +541,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// ELIMINA LEZIONE
+	// DELETE LESSON
 	// =====================================================
 
 	public boolean eliminaLezione(
@@ -308,7 +554,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// GET LEZIONI
+	// GET LESSONS
 	// =====================================================
 
 	public List<Lezione> getLezioni() {
@@ -321,19 +567,19 @@ public class Controller {
 	// =====================================================
 
 	private boolean isOverlap(
-			LocalTime inizio1,
-			LocalTime fine1,
-			LocalTime inizio2,
-			LocalTime fine2
+			LocalTime start1,
+			LocalTime end1,
+			LocalTime start2,
+			LocalTime end2
 	) {
 
-		return inizio1.isBefore(fine2)
+		return start1.isBefore(end2)
 				&&
-				fine1.isAfter(inizio2);
+				end1.isAfter(start2);
 	}
 
 	// =====================================================
-	// CONFLITTO AULA
+	// CLASSROOM CONFLICT
 	// =====================================================
 
 	public boolean checkConflittoAula(
@@ -343,7 +589,8 @@ public class Controller {
 			Aula aula
 	) {
 
-		for (Lezione l : orario.getLezioni()) {
+		for (Lezione l
+				: orario.getLezioni()) {
 
 			boolean stessoGiorno =
 					l.getGiornoSettimana()
@@ -375,7 +622,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// CONFLITTO DOCENTE
+	// TEACHER CONFLICT
 	// =====================================================
 
 	public boolean checkConflittoDocente(
@@ -389,7 +636,8 @@ public class Controller {
 				insegnamento
 						.getDocenteTitolare();
 
-		for (Lezione l : orario.getLezioni()) {
+		for (Lezione l
+				: orario.getLezioni()) {
 
 			boolean stessoGiorno =
 					l.getGiornoSettimana()
@@ -422,7 +670,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// RICHIESTE
+	// SEND REQUEST
 	// =====================================================
 
 	public void inviaRichiesta(
@@ -436,16 +684,18 @@ public class Controller {
 	) {
 
 		if (!(utenteCorrente
-				instanceof Docente)) {
+				instanceof Docente docente)) {
 
 			return;
 		}
 
-		Docente docente =
-				(Docente) utenteCorrente;
+		// =================================================
+		// CREATE REQUEST
+		// =================================================
 
 		RichiestaSpostamento richiesta =
-				docente.inviaRichiesta(
+				new RichiestaSpostamento(
+						docente,
 						motivazione,
 						giornoAttuale,
 						oraInizioAttuale,
@@ -455,15 +705,18 @@ public class Controller {
 						oraFineProposta
 				);
 
-		if (richiesta != null) {
+		// =================================================
+		// SAVE REQUEST
+		// =================================================
 
-			richiesta.setDocente(docente);
-
-			orario.aggiungiRichiesta(
-					richiesta
-			);
-		}
+		orario.aggiungiRichiesta(
+				richiesta
+		);
 	}
+
+	// =====================================================
+	// GET REQUESTS
+	// =====================================================
 
 	public List<RichiestaSpostamento>
 	getRichieste() {
@@ -472,7 +725,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// APPROVA RICHIESTA
+	// APPROVE REQUEST
 	// =====================================================
 
 	public boolean approvaRichiesta(
@@ -480,7 +733,9 @@ public class Controller {
 	) {
 
 		if (!(utenteCorrente
-				instanceof ResponsabileOrari)) {
+				instanceof ResponsabileOrari)
+				||
+				richiesta == null) {
 
 			return false;
 		}
@@ -488,37 +743,32 @@ public class Controller {
 		Lezione lezioneDaSpostare =
 				null;
 
-		// Ricerca lezione
-
 		for (Lezione l
 				: orario.getLezioni()) {
-
-			boolean stessoGiorno =
-					l.getGiornoSettimana()
-							==
-							richiesta
-									.getGiornoAttuale();
-
-			boolean stessaOra =
-					l.getOraInizio()
-							.equals(
-									richiesta
-											.getOraInizioAttuale()
-							);
 
 			boolean stessoDocente =
 					l.getInsegnamento()
 							.getDocenteTitolare()
 							.equals(
-									richiesta
-											.getDocente()
+									richiesta.getDocente()
 							);
 
-			if (stessoGiorno
+			boolean stessoGiorno =
+					l.getGiornoSettimana()
+							==
+							richiesta.getGiornoAttuale();
+
+			boolean stessaOra =
+					l.getOraInizio()
+							.equals(
+									richiesta.getOraInizioAttuale()
+							);
+
+			if (stessoDocente
 					&&
-					stessaOra
+					stessoGiorno
 					&&
-					stessoDocente) {
+					stessaOra) {
 
 				lezioneDaSpostare = l;
 
@@ -531,98 +781,52 @@ public class Controller {
 			return false;
 		}
 
-		// =================================================
-		// RIMOZIONE TEMPORANEA
-		// =================================================
+		if (checkConflittoAula(
+				richiesta.getGiornoProposto(),
+				richiesta.getOraInizioProposta(),
+				richiesta.getOraFineProposta(),
+				lezioneDaSpostare.getAula()
+		)) {
+
+			return false;
+		}
+
+		if (checkConflittoDocente(
+				lezioneDaSpostare.getInsegnamento(),
+				richiesta.getGiornoProposto(),
+				richiesta.getOraInizioProposta(),
+				richiesta.getOraFineProposta()
+		)) {
+
+			return false;
+		}
 
 		orario.rimuoviLezione(
 				lezioneDaSpostare
 		);
 
-		try {
+		Lezione nuovaLezione =
+				new Lezione(
+						lezioneDaSpostare.getInsegnamento(),
+						richiesta.getGiornoProposto(),
+						richiesta.getOraInizioProposta(),
+						richiesta.getOraFineProposta(),
+						lezioneDaSpostare.getAula()
+				);
 
-			// Controllo conflitto aula
+		orario.aggiungiLezione(
+				nuovaLezione
+		);
 
-			boolean conflittoAula =
-					checkConflittoAula(
-							richiesta
-									.getGiornoProposto(),
+		richiesta.setStato(
+				StatoRichiesta.APPROVATA
+		);
 
-							richiesta
-									.getOraInizioProposta(),
-
-							richiesta
-									.getOraFineProposta(),
-
-							lezioneDaSpostare
-									.getAula()
-					);
-
-			// Controllo conflitto docente
-
-			boolean conflittoDocente =
-					checkConflittoDocente(
-							lezioneDaSpostare
-									.getInsegnamento(),
-
-							richiesta
-									.getGiornoProposto(),
-
-							richiesta
-									.getOraInizioProposta(),
-
-							richiesta
-									.getOraFineProposta()
-					);
-
-			if (conflittoAula
-					|| conflittoDocente) {
-
-				return false;
-			}
-
-			// Aggiornamento lezione
-
-			lezioneDaSpostare
-					.setGiornoSettimana(
-							richiesta
-									.getGiornoProposto()
-					);
-
-			lezioneDaSpostare
-					.setOraInizio(
-							richiesta
-									.getOraInizioProposta()
-					);
-
-			lezioneDaSpostare
-					.setOraFine(
-							richiesta
-									.getOraFineProposta()
-					);
-
-			// Approvazione richiesta
-
-			richiesta.setStato(
-					StatoRichiesta.APPROVATA
-			);
-
-			return true;
-
-		} finally {
-
-			// =================================================
-			// RIPRISTINO SICURO
-			// =================================================
-
-			orario.aggiungiLezione(
-					lezioneDaSpostare
-			);
-		}
+		return true;
 	}
 
 	// =====================================================
-	// RIFIUTA RICHIESTA
+	// REJECT REQUEST
 	// =====================================================
 
 	public void rifiutaRichiesta(
@@ -630,7 +834,9 @@ public class Controller {
 	) {
 
 		if (!(utenteCorrente
-				instanceof ResponsabileOrari)) {
+				instanceof ResponsabileOrari)
+				||
+				richiesta == null) {
 
 			return;
 		}
@@ -641,10 +847,11 @@ public class Controller {
 	}
 
 	// =====================================================
-	// ORARIO COMPLETO
+	// FULL TIMETABLE
 	// =====================================================
 
-	public Object[][] getDatiTabellaOrario() {
+	public Object[][]
+	getDatiTabellaOrario() {
 
 		return buildTabellaLezioni(
 				orario.getLezioni()
@@ -652,20 +859,17 @@ public class Controller {
 	}
 
 	// =====================================================
-	// ORARIO STUDENTE
+	// STUDENT TIMETABLE
 	// =====================================================
 
 	public Object[][]
 	getDatiTabellaOrarioStudente() {
 
 		if (!(utenteCorrente
-				instanceof Studente)) {
+				instanceof Studente studente)) {
 
 			return null;
 		}
-
-		Studente studente =
-				(Studente) utenteCorrente;
 
 		List<Lezione> filtrate =
 				new ArrayList<>();
@@ -688,20 +892,17 @@ public class Controller {
 	}
 
 	// =====================================================
-	// ORARIO DOCENTE
+	// TEACHER TIMETABLE
 	// =====================================================
 
 	public Object[][]
 	getDatiTabellaOrarioDocente() {
 
 		if (!(utenteCorrente
-				instanceof Docente)) {
+				instanceof Docente docente)) {
 
 			return null;
 		}
-
-		Docente docente =
-				(Docente) utenteCorrente;
 
 		List<Lezione> filtrate =
 				new ArrayList<>();
@@ -723,7 +924,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// BUILD TABELLA LEZIONI
+	// BUILD LESSON TABLE
 	// =====================================================
 
 	private Object[][]
@@ -749,7 +950,14 @@ public class Controller {
 
 			dati[i][1] =
 					l.getInsegnamento()
-							.getDocenteTitolare();
+							.getDocenteTitolare()
+							.getCognome()
+							+
+							" "
+							+
+							l.getInsegnamento()
+									.getDocenteTitolare()
+									.getNome();
 
 			dati[i][2] =
 					l.getGiornoSettimana();
@@ -769,7 +977,7 @@ public class Controller {
 	}
 
 	// =====================================================
-	// TABELLA RICHIESTE
+	// REQUEST TABLE
 	// =====================================================
 
 	public Object[][]
@@ -792,7 +1000,13 @@ public class Controller {
 					richieste.get(i);
 
 			dati[i][0] =
-					r.getDocente();
+					r.getDocente()
+							.getCognome()
+							+
+							" "
+							+
+							r.getDocente()
+									.getNome();
 
 			dati[i][1] =
 					r.getMotivazione();
@@ -801,10 +1015,22 @@ public class Controller {
 					r.getStato();
 
 			dati[i][3] =
-					r.getGiornoAttuale();
+					r.getGiornoAttuale()
+							+
+							" ("
+							+
+							r.getOraInizioAttuale()
+							+
+							")";
 
 			dati[i][4] =
-					r.getGiornoProposto();
+					r.getGiornoProposto()
+							+
+							" ("
+							+
+							r.getOraInizioProposta()
+							+
+							")";
 
 			dati[i][5] =
 					r.getDataRichiesta();
