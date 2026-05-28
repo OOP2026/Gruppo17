@@ -35,7 +35,7 @@
           <opaque value="true"/>
           <preferredSize width="450" height="280"/>
         </properties>
-        <border type="line">
+        <border type="none">
           <color color="-12166531"/>
         </border>
         <children>

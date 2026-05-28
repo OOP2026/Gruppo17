@@ -24,7 +24,7 @@
           <minimumSize width="450" height="310"/>
           <preferredSize width="450" height="280"/>
         </properties>
-        <border type="line"/>
+        <border type="none"/>
         <children>
           <component id="45ea2" class="javax.swing.JLabel" binding="lblSurnameRegister" custom-create="true">
             <constraints>
