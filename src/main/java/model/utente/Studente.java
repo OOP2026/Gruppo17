@@ -16,7 +16,7 @@ public class Studente extends Utente {
                     String matricola,
                     AnnoCorso annoCorso) {
 
-        super(nome, cognome, email, login, password);
+        super(nome, cognome, email, login, password, UserRole.STUDENT);
 
         this.matricola = matricola;
         this.annoCorso = annoCorso;

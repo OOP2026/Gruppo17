@@ -1,8 +1,11 @@
 package gui;
 
 import controller.Controller;
+import model.didattica.AnnoCorso;
+import model.utente.UserRole;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
 
 public class RegisterFrame extends JFrame {
 
@@ -12,13 +15,7 @@ public class RegisterFrame extends JFrame {
 
     private JPanel mainPanelRegister;
 
-    private JLabel lblTitleRegister;
-
     private JPanel formPanelRegister;
-
-    private JLabel lblRoleRegister;
-
-    private JComboBox<String> cmbRoleRegister;
 
     private JLabel lblSurnameRegister;
 
@@ -30,23 +27,31 @@ public class RegisterFrame extends JFrame {
 
     private JLabel lblPasswordRegister;
 
-    private JLabel lblStudentIDRegister;
-
-    private JTextField txtSurnameRegister;
-
-    private JTextField txtNameRegister;
-
-    private JTextField txtEmailRegister;
-
-    private JTextField txtLoginRegister;
+    private JLabel lblRoleRegister;
 
     private JTextField txtStudentIDRegister;
 
+    private JComboBox<String> cmbRoleRegister;
+
     private JPasswordField txtPasswordRegister;
+
+    private JTextField txtLoginRegister;
+
+    private JTextField txtEmailRegister;
+
+    private JTextField txtNameRegister;
+
+    private JTextField txtSurnameRegister;
+
+    private JComboBox<String> cmbAnnoCorso;
+
+    private JButton btnBackRegister;
 
     private JButton btnRegister;
 
-    private JButton btnBackRegister;
+    private JLabel lblAnnoCorso;
+
+    private JLabel lblTitleRegister;
 
     // =====================================================
     // CONTROLLER
@@ -62,15 +67,11 @@ public class RegisterFrame extends JFrame {
 
         this.controller = controller;
 
-        // =================================================
-        // FRAME SETTINGS
-        // =================================================
-
         setContentPane(mainPanelRegister);
 
-        setTitle("Create New Account");
+        setTitle("University Timetable Manager - Registration");
 
-        setSize(850, 550);
+        setSize(850, 650);
 
         setLocationRelativeTo(null);
 
@@ -78,32 +79,32 @@ public class RegisterFrame extends JFrame {
 
         setResizable(false);
 
-        // =================================================
-        // INITIALIZATION
-        // =================================================
-
-        initializeComboBox();
+        initializeComboBoxes();
 
         initializeListeners();
 
-        updateRoleFields();
+        toggleStudentFields();
     }
 
     // =====================================================
-    // COMBOBOX
+    // COMBOBOXES INITIALIZATION
     // =====================================================
 
-    private void initializeComboBox() {
+    private void initializeComboBoxes() {
 
         cmbRoleRegister.removeAllItems();
-
         cmbRoleRegister.addItem("Student");
-
         cmbRoleRegister.addItem("Teacher");
-
         cmbRoleRegister.addItem("Administrator");
-
         cmbRoleRegister.setSelectedIndex(0);
+
+        cmbAnnoCorso.removeAllItems();
+        cmbAnnoCorso.addItem("First Year");
+        cmbAnnoCorso.addItem("Second Year");
+        cmbAnnoCorso.addItem("Third Year");
+        cmbAnnoCorso.addItem("Fourth Year");
+        cmbAnnoCorso.addItem("Fifth Year");
+        cmbAnnoCorso.setSelectedIndex(0);
     }
 
     // =====================================================
@@ -112,233 +113,129 @@ public class RegisterFrame extends JFrame {
 
     private void initializeListeners() {
 
-        // =================================================
-        // REGISTER BUTTON
-        // =================================================
+        cmbRoleRegister.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                toggleStudentFields();
+            }
+        });
 
         btnRegister.addActionListener(e -> register());
 
-        // =================================================
-        // BACK BUTTON
-        // =================================================
-
-        btnBackRegister.addActionListener(e -> backToLogin());
-
-        // =================================================
-        // ROLE CHANGE
-        // =================================================
-
-        cmbRoleRegister.addActionListener(e -> updateRoleFields());
+        btnBackRegister.addActionListener(e -> controller.showLoginFrame());
     }
 
     // =====================================================
-    // REGISTER
+    // TOGGLE STUDENT FIELDS
+    // =====================================================
+
+    private void toggleStudentFields() {
+
+        String selectedRole = (String) cmbRoleRegister.getSelectedItem();
+        boolean isStudent = "Student".equals(selectedRole);
+
+        lblAnnoCorso.setVisible(isStudent);
+        cmbAnnoCorso.setVisible(isStudent);
+        lblTitleRegister.setVisible(isStudent);
+        txtStudentIDRegister.setVisible(isStudent);
+
+        revalidate();
+        repaint();
+    }
+
+    // =====================================================
+    // REGISTER LOGIC
     // =====================================================
 
     private void register() {
 
-        // =================================================
-        // GET DATA
-        // =================================================
+        String name = txtNameRegister.getText().trim();
+        String surname = txtSurnameRegister.getText().trim();
+        String email = txtEmailRegister.getText().trim();
+        String login = txtLoginRegister.getText().trim();
+        String password = String.valueOf(txtPasswordRegister.getPassword());
+        String roleStr = (String) cmbRoleRegister.getSelectedItem();
 
-        String surname =
-                txtSurnameRegister
-                        .getText()
-                        .trim();
-
-        String name =
-                txtNameRegister
-                        .getText()
-                        .trim();
-
-        String email =
-                txtEmailRegister
-                        .getText()
-                        .trim();
-
-        String login =
-                txtLoginRegister
-                        .getText()
-                        .trim();
-
-        String password =
-                String.valueOf(
-                        txtPasswordRegister
-                                .getPassword()
-                );
-
-        String role =
-                (String) cmbRoleRegister
-                        .getSelectedItem();
-
-        String studentId =
-                txtStudentIDRegister
-                        .getText()
-                        .trim();
-
-        // =================================================
-        // VALIDATION
-        // =================================================
-
-        if (surname.isEmpty()
-                || name.isEmpty()
-                || email.isEmpty()
-                || login.isEmpty()
-                || password.isEmpty()) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Please fill all required fields!",
-                    "Warning",
-                    JOptionPane.WARNING_MESSAGE
-            );
-
+        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty()) {
+            showWarning("All standard fields must be filled!");
             return;
         }
 
-        // =================================================
-        // STUDENT VALIDATION
-        // =================================================
+        UserRole role = null;
+        AnnoCorso annoCorso = null;
+        String studentId = null;
 
-        if (role.equals("Student")
-                && studentId.isEmpty()) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Student ID is required!",
-                    "Warning",
-                    JOptionPane.WARNING_MESSAGE
-            );
-
-            return;
+        if ("Student".equals(roleStr)) {
+            role = UserRole.STUDENT;
+        } else if ("Teacher".equals(roleStr)) {
+            role = UserRole.TEACHER;
+        } else if ("Administrator".equals(roleStr)) {
+            role = UserRole.ADMIN;
         }
 
-        // =================================================
-        // REGISTER IN CONTROLLER
-        // =================================================
+        if (role == UserRole.STUDENT) {
+            studentId = txtStudentIDRegister.getText().trim();
+            String yearStr = (String) cmbAnnoCorso.getSelectedItem();
 
-        boolean success =
-                controller.register(
-                        surname,
-                        name,
-                        email,
-                        login,
-                        password,
-                        role,
-                        studentId
-                );
+            if (studentId.isEmpty() || yearStr == null) {
+                showWarning("Please provide Student ID and Year of Course!");
+                return;
+            }
 
-        // =================================================
-        // SUCCESS
-        // =================================================
+            if ("First Year".equals(yearStr)) annoCorso = AnnoCorso.PRIMO;
+            else if ("Second Year".equals(yearStr)) annoCorso = AnnoCorso.SECONDO;
+            else if ("Third Year".equals(yearStr)) annoCorso = AnnoCorso.TERZO;
+
+        }
+
+        boolean success = controller.register(
+                name,
+                surname,
+                email,
+                login,
+                password,
+                role,
+                studentId,
+                annoCorso
+        );
 
         if (success) {
-
             JOptionPane.showMessageDialog(
                     this,
-                    "Registration successful!",
+                    "Registration successful! You can now log in.",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
 
             controller.showLoginFrame();
-
             dispose();
-        }
-
-        // =================================================
-        // ERROR
-        // =================================================
-
-        else {
-
+        } else {
             JOptionPane.showMessageDialog(
                     this,
-                    "Registration failed!",
+                    "Registration failed! Login might already be taken.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
-
-            txtPasswordRegister.setText("");
         }
     }
 
     // =====================================================
-    // BACK TO LOGIN
+    // HELPER METHODS
     // =====================================================
 
-    private void backToLogin() {
-
-        controller.showLoginFrame();
-
-        dispose();
+    private void showWarning(String message) {
+        JOptionPane.showMessageDialog(this, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    // =====================================================
-    // UPDATE ROLE FIELDS
-    // =====================================================
-
-    private void updateRoleFields() {
-
-        String role =
-                (String) cmbRoleRegister
-                        .getSelectedItem();
-
-        boolean isStudent =
-                role.equals("Student");
-
-        // =================================================
-        // ENABLE / DISABLE STUDENT ID
-        // =================================================
-
-        lblStudentIDRegister
-                .setEnabled(isStudent);
-
-        txtStudentIDRegister
-                .setEnabled(isStudent);
-
-        // =================================================
-        // CLEAR FIELD IF NOT STUDENT
-        // =================================================
-
-        if (!isStudent) {
-
-            txtStudentIDRegister.setText("");
-        }
-
-        // =================================================
-        // REFRESH UI
-        // =================================================
-
-        mainPanelRegister.revalidate();
-
-        mainPanelRegister.repaint();
-    }
-
-    // =====================================================
-    // CLEAR FIELDS
-    // =====================================================
-
-    private void clearFields() {
-
-        txtSurnameRegister.setText("");
-
+    public void clearFields() {
         txtNameRegister.setText("");
-
+        txtSurnameRegister.setText("");
         txtEmailRegister.setText("");
-
         txtLoginRegister.setText("");
-
         txtPasswordRegister.setText("");
-
         txtStudentIDRegister.setText("");
-
         cmbRoleRegister.setSelectedIndex(0);
+        cmbAnnoCorso.setSelectedIndex(0);
     }
-
-    // =====================================================
-    // SWING CUSTOM COMPONENTS
-    // =====================================================
 
     private void createUIComponents() {
 

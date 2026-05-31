@@ -13,7 +13,7 @@ public class ResponsabileOrari extends Docente {
                              String login,
                              String password) {
 
-        super(nome, cognome, email, login, password);
+        super(nome, cognome, email, login, password, UserRole.ADMIN);
     }
 
     // Approvazione richiesta

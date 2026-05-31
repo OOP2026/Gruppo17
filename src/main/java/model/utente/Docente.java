@@ -7,20 +7,25 @@ import java.time.LocalTime;
 
 public class Docente extends Utente {
 
-    // Costruttore
+    // Costruttore principale
     public Docente(String nome,
                    String cognome,
                    String email,
                    String login,
                    String password) {
 
-        super(
-                nome,
-                cognome,
-                email,
-                login,
-                password
-        );
+
+        super(nome, cognome, email, login, password, UserRole.TEACHER);
+    }
+
+    protected Docente(String nome,
+                      String cognome,
+                      String email,
+                      String login,
+                      String password,
+                      UserRole role) {
+
+        super(nome, cognome, email, login, password, role);
     }
 
     // Visualizzazione orario

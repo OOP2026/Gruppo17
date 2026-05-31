@@ -7,15 +7,17 @@ public abstract class Utente {
     private String email;
     private String login;
     private String password;
+    private UserRole role;
 
     public Utente(String nome, String cognome,
-                  String email, String login, String password) {
+                  String email, String login, String password, UserRole role) {
 
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
         this.login = login;
         this.password = password;
+        this.role = role;
     }
 
     public void registrazione() {
@@ -28,6 +30,11 @@ public abstract class Utente {
     }
 
     public abstract void visualizzaOrario();
+
+    // ДОДАНО: Геттер для ролі користувача (знадобиться в контролері та фреймах)
+    public UserRole getRole() {
+        return role;
+    }
 
     public String getNome() {
         return nome;

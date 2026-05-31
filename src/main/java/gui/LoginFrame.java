@@ -1,6 +1,7 @@
 package gui;
 
 import controller.Controller;
+import model.utente.UserRole;
 
 import javax.swing.*;
 
@@ -34,6 +35,8 @@ public class LoginFrame extends JFrame {
 
     private JButton btnRegister;
 
+    private JButton btnExit;
+
     // =====================================================
     // CONTROLLER
     // =====================================================
@@ -58,6 +61,8 @@ public class LoginFrame extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        setResizable(false);
+
         initializeComboBox();
 
         initializeListeners();
@@ -69,11 +74,11 @@ public class LoginFrame extends JFrame {
 
     private void initializeComboBox() {
 
+        cmbRole.removeAllItems();
         cmbRole.addItem("Student");
-
         cmbRole.addItem("Teacher");
-
         cmbRole.addItem("Administrator");
+        cmbRole.setSelectedIndex(0);
     }
 
     // =====================================================
@@ -82,25 +87,13 @@ public class LoginFrame extends JFrame {
 
     private void initializeListeners() {
 
-        // =================================================
-        // LOGIN
-        // =================================================
-
         btnOk.addActionListener(e -> login());
-
-        // =================================================
-        // CLEAR
-        // =================================================
 
         btnClear.addActionListener(e -> clearFields());
 
-        // =================================================
-        // REGISTER
-        // =================================================
+        btnRegister.addActionListener(e -> controller.showRegisterFrame());
 
-        btnRegister.addActionListener(e ->
-                controller.showRegisterFrame()
-        );
+        btnExit.addActionListener(e -> System.exit(0));
     }
 
     // =====================================================
@@ -109,34 +102,45 @@ public class LoginFrame extends JFrame {
 
     private void login() {
 
-        String login =
-                txtLogin.getText().trim();
+        String login = txtLogin.getText().trim();
+        String password = String.valueOf(txtPassword.getPassword());
+        String selectedRole = (String) cmbRole.getSelectedItem();
 
-        String password =
-                String.valueOf(
-                        txtPassword.getPassword()
-                );
-
-        if(login.isEmpty()
-                || password.isEmpty()) {
-
+        if (login.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(
                     this,
                     "Fields cannot be empty!",
                     "Warning",
                     JOptionPane.WARNING_MESSAGE
             );
-
             return;
         }
 
-        boolean success =
-                controller.login(
-                        login,
-                        password
-                );
+        boolean success = controller.login(login, password);
 
-        if(success) {
+        if (success) {
+
+            UserRole actualRole = controller.getTargetHomeRole();
+            boolean roleMatches = false;
+
+            if ("Student".equals(selectedRole) && actualRole == UserRole.STUDENT) {
+                roleMatches = true;
+            } else if ("Teacher".equals(selectedRole) && actualRole == UserRole.TEACHER) {
+                roleMatches = true;
+            } else if ("Administrator".equals(selectedRole) && actualRole == UserRole.ADMIN) {
+                roleMatches = true;
+            }
+
+            if (!roleMatches) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Selected role does not match this user account type!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                controller.logout();
+                return;
+            }
 
             JOptionPane.showMessageDialog(
                     this,
@@ -146,19 +150,14 @@ public class LoginFrame extends JFrame {
             );
 
             controller.openHomeByRole();
-
             dispose();
-        }
-
-        else {
-
+        } else {
             JOptionPane.showMessageDialog(
                     this,
                     "Wrong login or password!",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
-
             txtPassword.setText("");
         }
     }
@@ -167,18 +166,11 @@ public class LoginFrame extends JFrame {
     // CLEAR FIELDS
     // =====================================================
 
-    private void clearFields() {
-
+    public void clearFields() {
         txtLogin.setText("");
-
         txtPassword.setText("");
-
         cmbRole.setSelectedIndex(0);
     }
-
-    // =====================================================
-    // SWING COMPONENTS
-    // =====================================================
 
     private void createUIComponents() {
 
