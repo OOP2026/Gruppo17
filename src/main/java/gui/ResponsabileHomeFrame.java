@@ -14,7 +14,7 @@ public class ResponsabileHomeFrame extends JFrame {
         tabbedPane.addTab("Crea Lezione", new CreaLezionePanel());
         tabbedPane.addTab("Gestione Aule", new GestioneAulePanel());
         tabbedPane.addTab("Richieste di Spostamento", new RichiestePanel());
-        tabbedPane.addTab("Orario Globale", new VisualizzaOrarioPanel());
+        tabbedPane.addTab("Orario Globale", new VisualizzaOrarioFrame());
 
         setContentPane(tabbedPane);
     }

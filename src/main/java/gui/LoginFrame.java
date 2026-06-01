@@ -8,72 +8,55 @@ import javax.swing.*;
 public class LoginFrame extends JFrame {
 
     // =====================================================
-    // COMPONENTS
+    // COMPONENTS (Повністю синхронізовано з 777.jpg)
     // =====================================================
-
     private JPanel mainPanel;
-
     private JLabel lblTitle;
 
+    // Синя панель форми та її вміст
     private JPanel formPanel;
-
     private JLabel lblRole;
-
     private JComboBox<String> cmbRole;
-
     private JLabel lblLogin;
-
-    private JLabel lblPassword;
-
     private JTextField txtLogin;
-
+    private JLabel lblPassword;
     private JPasswordField txtPassword;
 
+    // Нижня панель для кнопок та самі кнопки
+    private JPanel buttonPanel;
     private JButton btnOk;
-
     private JButton btnClear;
-
     private JButton btnRegister;
-
     private JButton btnExit;
 
     // =====================================================
     // CONTROLLER
     // =====================================================
-
     private final Controller controller;
 
     // =====================================================
     // CONSTRUCTOR
     // =====================================================
-
     public LoginFrame(Controller controller) {
-
         this.controller = controller;
 
         setContentPane(mainPanel);
-
         setTitle("University Timetable Manager");
 
+        // Підганяємо розмір автоматично або залишаємо твій фіксований:
         setSize(850, 550);
-
         setLocationRelativeTo(null);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         setResizable(false);
 
         initializeComboBox();
-
         initializeListeners();
     }
 
     // =====================================================
     // COMBOBOX
     // =====================================================
-
     private void initializeComboBox() {
-
         cmbRole.removeAllItems();
         cmbRole.addItem("Student");
         cmbRole.addItem("Teacher");
@@ -84,24 +67,17 @@ public class LoginFrame extends JFrame {
     // =====================================================
     // LISTENERS
     // =====================================================
-
     private void initializeListeners() {
-
         btnOk.addActionListener(e -> login());
-
         btnClear.addActionListener(e -> clearFields());
-
         btnRegister.addActionListener(e -> controller.showRegisterFrame());
-
         btnExit.addActionListener(e -> System.exit(0));
     }
 
     // =====================================================
-    // LOGIN
+    // LOGIN LOGIC
     // =====================================================
-
     private void login() {
-
         String login = txtLogin.getText().trim();
         String password = String.valueOf(txtPassword.getPassword());
         String selectedRole = (String) cmbRole.getSelectedItem();
@@ -119,7 +95,6 @@ public class LoginFrame extends JFrame {
         boolean success = controller.login(login, password);
 
         if (success) {
-
             UserRole actualRole = controller.getTargetHomeRole();
             boolean roleMatches = false;
 
@@ -165,14 +140,9 @@ public class LoginFrame extends JFrame {
     // =====================================================
     // CLEAR FIELDS
     // =====================================================
-
     public void clearFields() {
         txtLogin.setText("");
         txtPassword.setText("");
         cmbRole.setSelectedIndex(0);
-    }
-
-    private void createUIComponents() {
-
     }
 }

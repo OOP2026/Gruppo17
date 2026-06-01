@@ -7,12 +7,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class VisualizzaOrarioPanel extends JPanel {
+public class VisualizzaOrarioFrame extends JPanel {
 
     private JTable tableOrario;
     private DefaultTableModel tableModel;
 
-    public VisualizzaOrarioPanel() {
+    public VisualizzaOrarioFrame() {
         setLayout(new BorderLayout());
         String[] colonne = {"Giorno", "Ora Inizio", "Ora Fine", "Insegnamento", "Aula", "Docente"};
         tableModel = new DefaultTableModel(colonne, 0) {

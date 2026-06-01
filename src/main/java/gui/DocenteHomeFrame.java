@@ -15,7 +15,7 @@ public class DocenteHomeFrame extends JFrame {
         setLocationRelativeTo(null);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Il Mio Orario", new VisualizzaOrarioPanel());
+        tabbedPane.addTab("Il Mio Orario", new VisualizzaOrarioFrame());
         tabbedPane.addTab("Richiesta Spostamento", new RichiestaSpostamentoPanel(docente));
         tabbedPane.addTab("Profilo", new ProfiloPanel(docente));
 

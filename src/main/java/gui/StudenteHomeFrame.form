@@ -1,13 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.StudenteHomeFrame">
-  <grid id="27dc6" row-count="1" column-count="1" layout-manager="BorderLayout">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="mainPanelStudent" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="20" left="30" bottom="30" right="40"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+      <xy x="17" y="9" width="601" height="455"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-1314568"/>
+    </properties>
     <border type="none"/>
-    <children/>
+    <children>
+      <component id="b3ec3" class="javax.swing.JLabel" binding="lblTitleStudent" custom-create="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <font name="Segoe UI" size="24" style="1"/>
+          <foreground color="-14796193"/>
+          <text value="Student Profile Information"/>
+        </properties>
+      </component>
+      <grid id="96e80" binding="formPanelStudent" custom-create="true" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="25" left="25" bottom="25" right="25"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-13812134"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="1640c" class="javax.swing.JTextField" binding="txtSurnameStudent" custom-create="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <enabled value="true"/>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-13615526"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="9e8b0" class="javax.swing.JLabel" binding="lblSurnameStudent" custom-create="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Surname"/>
+            </properties>
+          </component>
+          <component id="f4f40" class="javax.swing.JLabel" binding="lblNameStudent" custom-create="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Name"/>
+            </properties>
+          </component>
+          <component id="4b78c" class="javax.swing.JLabel" binding="lblEmailStudente" custom-create="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Email"/>
+            </properties>
+          </component>
+          <component id="2da03" class="javax.swing.JLabel" binding="lblLoginStudente" custom-create="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Login"/>
+            </properties>
+          </component>
+          <component id="b3fc6" class="javax.swing.JLabel" binding="lblMatricolaStudente" custom-create="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Student ID"/>
+            </properties>
+          </component>
+          <component id="ce5b0" class="javax.swing.JLabel" binding="lblCourseYearStudent" custom-create="true">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Year of Study"/>
+            </properties>
+          </component>
+          <component id="7c4d7" class="javax.swing.JTextField" binding="txtNameStudent">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <enabled value="true"/>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-13812134"/>
+            </properties>
+          </component>
+          <component id="1c3c8" class="javax.swing.JTextField" binding="txtLoginStudent" custom-create="true">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-13812134"/>
+            </properties>
+          </component>
+          <component id="7b49b" class="javax.swing.JTextField" binding="txtCourseYearStudent" custom-create="true">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <font size="16" style="1"/>
+              <foreground color="-13812134"/>
+            </properties>
+          </component>
+          <component id="f4dac" class="javax.swing.JTextField" binding="JTextField" custom-create="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-13812134"/>
+            </properties>
+          </component>
+          <component id="7a04b" class="javax.swing.JTextField" binding="txtMatricolaStudent" custom-create="true">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <editable value="false"/>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-13812134"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="a2c74" class="javax.swing.JButton" binding="btnBackToLogin" custom-create="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <preferred-size width="160" height="40"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-11108935"/>
+          <font name="Segoe UI" size="14" style="1"/>
+          <foreground color="-1"/>
+          <text value="Back"/>
+        </properties>
+      </component>
+      <component id="a48a2" class="javax.swing.JButton" binding="btnVisualizzaOrario" custom-create="true">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="160" height="40"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-11108935"/>
+          <font name="Segoe UI" size="14" style="1"/>
+          <foreground color="-1"/>
+          <text value="Visualizza Orario"/>
+        </properties>
+      </component>
+    </children>
   </grid>
 </form>
