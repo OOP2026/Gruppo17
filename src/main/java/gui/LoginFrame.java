@@ -7,66 +7,49 @@ import javax.swing.*;
 
 public class LoginFrame extends JFrame {
 
-    // =====================================================
-    // COMPONENTS (Повністю синхронізовано з 777.jpg)
-    // =====================================================
-    private JPanel mainPanel;
-    private JLabel lblTitle;
+    private JPanel mainPanelLogin;
+    private JLabel lblTitleLogin;
 
-    // Синя панель форми та її вміст
-    private JPanel formPanel;
-    private JLabel lblRole;
-    private JComboBox<String> cmbRole;
-    private JLabel lblLogin;
-    private JTextField txtLogin;
-    private JLabel lblPassword;
-    private JPasswordField txtPassword;
+    private JPanel formPanelLogin;
+    private JLabel lblRoleLogin;
+    private JComboBox<String> cmbRoleLogin;
+    private JLabel lblLoginLogin;
+    private JLabel lblPasswordLogin;
+    private JTextField txtLoginLogin;
+    private JPasswordField txtPasswordLogin;
 
-    // Нижня панель для кнопок та самі кнопки
-    private JPanel buttonPanel;
+    private JPanel buttonPanelLogin;
     private JButton btnOk;
     private JButton btnClear;
     private JButton btnRegister;
     private JButton btnExit;
 
-    // =====================================================
-    // CONTROLLER
-    // =====================================================
     private final Controller controller;
 
-    // =====================================================
-    // CONSTRUCTOR
-    // =====================================================
     public LoginFrame(Controller controller) {
         this.controller = controller;
 
-        setContentPane(mainPanel);
+        setContentPane(mainPanelLogin);
         setTitle("University Timetable Manager");
 
-        // Підганяємо розмір автоматично або залишаємо твій фіксований:
-        setSize(850, 550);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
         initializeComboBox();
         initializeListeners();
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
-    // =====================================================
-    // COMBOBOX
-    // =====================================================
     private void initializeComboBox() {
-        cmbRole.removeAllItems();
-        cmbRole.addItem("Student");
-        cmbRole.addItem("Teacher");
-        cmbRole.addItem("Administrator");
-        cmbRole.setSelectedIndex(0);
+        cmbRoleLogin.removeAllItems();
+        cmbRoleLogin.addItem("Student");
+        cmbRoleLogin.addItem("Teacher");
+        cmbRoleLogin.addItem("Administrator");
+        cmbRoleLogin.setSelectedIndex(0);
     }
 
-    // =====================================================
-    // LISTENERS
-    // =====================================================
     private void initializeListeners() {
         btnOk.addActionListener(e -> login());
         btnClear.addActionListener(e -> clearFields());
@@ -74,13 +57,10 @@ public class LoginFrame extends JFrame {
         btnExit.addActionListener(e -> System.exit(0));
     }
 
-    // =====================================================
-    // LOGIN LOGIC
-    // =====================================================
     private void login() {
-        String login = txtLogin.getText().trim();
-        String password = String.valueOf(txtPassword.getPassword());
-        String selectedRole = (String) cmbRole.getSelectedItem();
+        String login = txtLoginLogin.getText().trim();
+        String password = String.valueOf(txtPasswordLogin.getPassword());
+        String selectedRole = (String) cmbRoleLogin.getSelectedItem();
 
         if (login.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(
@@ -133,16 +113,13 @@ public class LoginFrame extends JFrame {
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
-            txtPassword.setText("");
+            txtPasswordLogin.setText("");
         }
     }
 
-    // =====================================================
-    // CLEAR FIELDS
-    // =====================================================
     public void clearFields() {
-        txtLogin.setText("");
-        txtPassword.setText("");
-        cmbRole.setSelectedIndex(0);
+        txtLoginLogin.setText("");
+        txtPasswordLogin.setText("");
+        cmbRoleLogin.setSelectedIndex(0);
     }
 }

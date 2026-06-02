@@ -7,94 +7,73 @@ import javax.swing.*;
 
 public class StudenteHomeFrame extends JFrame {
 
-    // =====================================================
-    // COMPONENTS
-    // =====================================================
-    private JPanel mainPanelStudent;
-    private JLabel lblTitleStudent;
-    private JPanel formPanelStudent;
+    private JPanel mainPanelStudente;
+    private JLabel lblTitleStudente;
+    private JPanel formPanelStudente;
 
+    private JTextField txtSurnameStudente;
+    private JTextField txtNameStudente;
+    private JTextField txtEmailStudente;
+    private JTextField txtLoginStudente;
+    private JTextField txtMatricolaStudente;
+    private JTextField txtAnnoCorsoStudente;
 
-    private JTextField txtSurnameStudent;
-    private JTextField txtNameStudent;
-    private JTextField txtLoginStudent;
-    private JTextField txtCourseYearStudent;
-    private JTextField JTextField;
-    private JTextField txtMatricolaStudent;
-
-
-    private JLabel lblSurnameStudent;
-    private JLabel lblNameStudent;
+    private JLabel lblSurnameStudente;
+    private JLabel lblNameStudente;
     private JLabel lblEmailStudente;
     private JLabel lblLoginStudente;
     private JLabel lblMatricolaStudente;
-    private JLabel lblCourseYearStudent;
+    private JLabel lblAnnoCorsoStudente;
 
-    private JButton btnBackToLogin;
-    private JButton btnVisualizzaOrario;
+    private JButton btnVisualizzaOrarioStudente;
+    private JButton btnBackToLoginStudente;
 
-    // =====================================================
-    // FIELDS & CONTROLLER
-    // =====================================================
     private final Controller controller;
     private final Studente studente;
 
-    // =====================================================
-    // CONSTRUCTOR
-    // =====================================================
     public StudenteHomeFrame(Controller controller, Studente studente) {
         this.controller = controller;
         this.studente = studente;
 
-        setContentPane(mainPanelStudent);
-
+        setContentPane(mainPanelStudente);
         setTitle("University Timetable Manager - Student Area");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        pack();
-        setLocationRelativeTo(null);
-
         fillStudentData();
         initializeListeners();
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
-    // =====================================================
-    // LOGIC METHODS
-    // =====================================================
     private void fillStudentData() {
         if (studente != null) {
-            txtNameStudent.setText(studente.getNome());
-            txtSurnameStudent.setText(studente.getCognome());
-
-            if (JTextField != null) {
-                JTextField.setText(studente.getEmail());
-            }
-
-            txtLoginStudent.setText(studente.getLogin());
-            txtMatricolaStudent.setText(studente.getMatricola());
+            txtNameStudente.setText(studente.getNome());
+            txtSurnameStudente.setText(studente.getCognome());
+            txtEmailStudente.setText(studente.getEmail());
+            txtLoginStudente.setText(studente.getLogin());
+            txtMatricolaStudente.setText(studente.getMatricola());
 
             if (studente.getAnnoCorso() != null) {
                 switch (studente.getAnnoCorso()) {
-                    case PRIMO -> txtCourseYearStudent.setText("First Year (I)");
-                    case SECONDO -> txtCourseYearStudent.setText("Second Year (II)");
-                    case TERZO -> txtCourseYearStudent.setText("Third Year (III)");
-                    default -> txtCourseYearStudent.setText(studente.getAnnoCorso().toString());
+                    case PRIMO -> txtAnnoCorsoStudente.setText("First Year (I)");
+                    case SECONDO -> txtAnnoCorsoStudente.setText("Second Year (II)");
+                    case TERZO -> txtAnnoCorsoStudente.setText("Third Year (III)");
+                    default -> txtAnnoCorsoStudente.setText(studente.getAnnoCorso().toString());
                 }
             }
         }
     }
 
     private void initializeListeners() {
-
-        btnVisualizzaOrario.addActionListener(e -> {
+        btnVisualizzaOrarioStudente.addActionListener(e -> {
             VisualizzaOrarioFrame orarioFrame = new VisualizzaOrarioFrame(controller, studente, this);
             orarioFrame.setVisible(true);
             this.setVisible(false);
         });
 
-
-        btnBackToLogin.addActionListener(e -> {
+        btnBackToLoginStudente.addActionListener(e -> {
             controller.logout();
             controller.showLoginFrame();
             dispose();

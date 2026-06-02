@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.RegisterFrame">
-  <grid id="27dc6" binding="mainPanelRegister" custom-create="true" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanelRegister" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="5" left="0" bottom="20" right="20"/>
     <constraints>
       <xy x="8" y="11" width="512" height="409"/>
@@ -15,7 +15,7 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="a5785" binding="FormPanelRegister" custom-create="true" layout-manager="GridBagLayout">
+      <grid id="a5785" binding="FormPanelRegister" layout-manager="GridBagLayout">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="4" hsize-policy="4" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -26,7 +26,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="45ea2" class="javax.swing.JLabel" binding="lblSurnameRegister" custom-create="true">
+          <component id="45ea2" class="javax.swing.JLabel" binding="lblSurnameRegister">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag top="15" left="0" bottom="0" right="0" weightx="0.0" weighty="1.0"/>
@@ -46,7 +46,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="39097" class="javax.swing.JLabel" binding="lblNameRegister" custom-create="true">
+          <component id="39097" class="javax.swing.JLabel" binding="lblNameRegister">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -66,7 +66,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="f52bd" class="javax.swing.JLabel" binding="lblEmailRegister" custom-create="true">
+          <component id="f52bd" class="javax.swing.JLabel" binding="lblEmailRegister">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -86,7 +86,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="e79ec" class="javax.swing.JLabel" binding="lblLoginRegister" custom-create="true">
+          <component id="e79ec" class="javax.swing.JLabel" binding="lblLoginRegister">
             <constraints>
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -106,7 +106,7 @@
               <verticalTextPosition value="0"/>
             </properties>
           </component>
-          <component id="6646a" class="javax.swing.JLabel" binding="lblPasswordRegister" custom-create="true">
+          <component id="6646a" class="javax.swing.JLabel" binding="lblPasswordRegister">
             <constraints>
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -126,7 +126,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="41f8f" class="javax.swing.JLabel" binding="lblStudentIDRegister" custom-create="true">
+          <component id="41f8f" class="javax.swing.JLabel" binding="lblStudentIDRegister">
             <constraints>
               <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -144,7 +144,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="4c08a" class="javax.swing.JLabel" binding="lblRoleRegister" custom-create="true">
+          <component id="4c08a" class="javax.swing.JLabel" binding="lblRoleRegister">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="1.0"/>
@@ -164,7 +164,7 @@
               <verticalTextPosition value="1"/>
             </properties>
           </component>
-          <component id="c1a94" class="javax.swing.JTextField" binding="txtStudentIDRegister" custom-create="true">
+          <component id="c1a94" class="javax.swing.JTextField" binding="txtStudentIDRegister">
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="10"/>
@@ -197,7 +197,7 @@
               <preferredSize width="180" height="32"/>
             </properties>
           </component>
-          <component id="749b0" class="javax.swing.JPasswordField" binding="txtPasswordRegister" custom-create="true">
+          <component id="749b0" class="javax.swing.JPasswordField" binding="txtPasswordRegister">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -211,7 +211,7 @@
               <foreground color="-13812134"/>
             </properties>
           </component>
-          <component id="564a9" class="javax.swing.JTextField" binding="txtLoginRegister" custom-create="true">
+          <component id="564a9" class="javax.swing.JTextField" binding="txtLoginRegister">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="10"/>
@@ -227,7 +227,7 @@
               <foreground color="-13812134"/>
             </properties>
           </component>
-          <component id="6b205" class="javax.swing.JTextField" binding="txtEmailRegister" custom-create="true">
+          <component id="6b205" class="javax.swing.JTextField" binding="txtEmailRegister">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="10"/>
@@ -243,7 +243,7 @@
               <foreground color="-13812134"/>
             </properties>
           </component>
-          <component id="dd56e" class="javax.swing.JTextField" binding="txtNameRegister" custom-create="true">
+          <component id="dd56e" class="javax.swing.JTextField" binding="txtNameRegister">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="10"/>
@@ -259,7 +259,7 @@
               <foreground color="-13812134"/>
             </properties>
           </component>
-          <component id="2470a" class="javax.swing.JTextField" binding="txtSurnameRegister" custom-create="true">
+          <component id="2470a" class="javax.swing.JTextField" binding="txtSurnameRegister">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="10"/>
@@ -275,7 +275,7 @@
               <foreground color="-13812134"/>
             </properties>
           </component>
-          <component id="a959e" class="javax.swing.JComboBox" binding="cmbAnnoCorso" custom-create="true">
+          <component id="a959e" class="javax.swing.JComboBox" binding="cmbAnnoCorsoRegister">
             <constraints>
               <grid row="7" column="1" row-span="1" col-span="19" vsize-policy="0" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag top="0" left="0" bottom="0" right="10" weightx="1.0" weighty="1.0"/>
@@ -292,7 +292,7 @@
               <preferredSize width="180" height="32"/>
             </properties>
           </component>
-          <component id="68405" class="javax.swing.JLabel" binding="lblAnnoCorso" custom-create="true">
+          <component id="68405" class="javax.swing.JLabel" binding="lblAnnoCorsoRegister">
             <constraints>
               <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="1.0"/>
@@ -312,7 +312,7 @@
           </component>
         </children>
       </grid>
-      <component id="73de7" class="javax.swing.JLabel" binding="lblTitleRegister" custom-create="true">
+      <component id="73de7" class="javax.swing.JLabel" binding="lblTitleRegister">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="4" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -332,9 +332,11 @@
           <verticalTextPosition value="1"/>
         </properties>
       </component>
-      <component id="33264" class="javax.swing.JButton" binding="btnRegister" custom-create="true">
+      <component id="33264" class="javax.swing.JButton" binding="btnRegister">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="134" height="38"/>
+          </grid>
         </constraints>
         <properties>
           <background color="-11108935"/>
@@ -345,7 +347,9 @@
       </component>
       <component id="8e8a3" class="javax.swing.JButton" binding="btnBackRegister">
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="134" height="38"/>
+          </grid>
         </constraints>
         <properties>
           <background color="-11108935"/>

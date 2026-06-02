@@ -9,110 +9,65 @@ import java.awt.event.ItemEvent;
 
 public class RegisterFrame extends JFrame {
 
-    // =====================================================
-    // COMPONENTS
-    // =====================================================
-
     private JPanel mainPanelRegister;
-
-    private JPanel formPanelRegister;
-
-    private JLabel lblSurnameRegister;
-
-    private JLabel lblNameRegister;
-
-    private JLabel lblEmailRegister;
-
-    private JLabel lblLoginRegister;
-
-    private JLabel lblPasswordRegister;
-
-    private JLabel lblRoleRegister;
-
-    private JTextField txtStudentIDRegister;
-
-    private JComboBox<String> cmbRoleRegister;
-
-    private JPasswordField txtPasswordRegister;
-
-    private JTextField txtLoginRegister;
-
-    private JTextField txtEmailRegister;
-
-    private JTextField txtNameRegister;
-
-    private JTextField txtSurnameRegister;
-
-    private JComboBox<String> cmbAnnoCorso;
-
-    private JButton btnBackRegister;
-
-    private JButton btnRegister;
-
-    private JLabel lblAnnoCorso;
-
     private JLabel lblTitleRegister;
 
-    // =====================================================
-    // CONTROLLER
-    // =====================================================
+    private JPanel formPanelRegister;
+    private JLabel lblSurnameRegister;
+    private JTextField txtSurnameRegister;
+    private JLabel lblNameRegister;
+    private JTextField txtNameRegister;
+    private JLabel lblEmailRegister;
+    private JTextField txtEmailRegister;
+    private JLabel lblLoginRegister;
+    private JTextField txtLoginRegister;
+    private JLabel lblPasswordRegister;
+    private JPasswordField txtPasswordRegister;
+    private JLabel lblRoleRegister;
+    private JComboBox<String> cmbRoleRegister;
+    private JLabel lblStudentIDRegister;
+    private JTextField txtStudentIDRegister;
+    private JLabel lblAnnoCorsoRegister;
+    private JComboBox<String> cmbAnnoCorsoRegister;
+
+    private JPanel buttonPanelRegister;
+    private JButton btnRegister;
+    private JButton btnBackRegister;
 
     private final Controller controller;
 
-    // =====================================================
-    // CONSTRUCTOR
-    // =====================================================
-
     public RegisterFrame(Controller controller) {
-
         this.controller = controller;
 
         setContentPane(mainPanelRegister);
-
         setTitle("University Timetable Manager - Registration");
 
-        setSize(850, 650);
-
-        setLocationRelativeTo(null);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         setResizable(false);
 
         initializeComboBoxes();
-
         initializeListeners();
-
         toggleStudentFields();
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
-    // =====================================================
-    // COMBOBOXES INITIALIZATION
-    // =====================================================
-
     private void initializeComboBoxes() {
-
         cmbRoleRegister.removeAllItems();
         cmbRoleRegister.addItem("Student");
         cmbRoleRegister.addItem("Teacher");
         cmbRoleRegister.addItem("Administrator");
         cmbRoleRegister.setSelectedIndex(0);
 
-        cmbAnnoCorso.removeAllItems();
-        cmbAnnoCorso.addItem("First Year");
-        cmbAnnoCorso.addItem("Second Year");
-        cmbAnnoCorso.addItem("Third Year");
-        cmbAnnoCorso.addItem("Fourth Year");
-        cmbAnnoCorso.addItem("Fifth Year");
-        cmbAnnoCorso.setSelectedIndex(0);
+        cmbAnnoCorsoRegister.removeAllItems();
+        cmbAnnoCorsoRegister.addItem("First Year");
+        cmbAnnoCorsoRegister.addItem("Second Year");
+        cmbAnnoCorsoRegister.addItem("Third Year");
+        cmbAnnoCorsoRegister.setSelectedIndex(0);
     }
 
-    // =====================================================
-    // LISTENERS
-    // =====================================================
-
     private void initializeListeners() {
-
         cmbRoleRegister.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 toggleStudentFields();
@@ -120,34 +75,23 @@ public class RegisterFrame extends JFrame {
         });
 
         btnRegister.addActionListener(e -> register());
-
         btnBackRegister.addActionListener(e -> controller.showLoginFrame());
     }
 
-    // =====================================================
-    // TOGGLE STUDENT FIELDS
-    // =====================================================
-
     private void toggleStudentFields() {
-
         String selectedRole = (String) cmbRoleRegister.getSelectedItem();
         boolean isStudent = "Student".equals(selectedRole);
 
-        lblAnnoCorso.setVisible(isStudent);
-        cmbAnnoCorso.setVisible(isStudent);
-        lblTitleRegister.setVisible(isStudent);
+        lblStudentIDRegister.setVisible(isStudent);
         txtStudentIDRegister.setVisible(isStudent);
+        lblAnnoCorsoRegister.setVisible(isStudent);
+        cmbAnnoCorsoRegister.setVisible(isStudent);
 
-        revalidate();
-        repaint();
+        pack();
+        setLocationRelativeTo(null);
     }
 
-    // =====================================================
-    // REGISTER LOGIC
-    // =====================================================
-
     private void register() {
-
         String name = txtNameRegister.getText().trim();
         String surname = txtSurnameRegister.getText().trim();
         String email = txtEmailRegister.getText().trim();
@@ -174,7 +118,7 @@ public class RegisterFrame extends JFrame {
 
         if (role == UserRole.STUDENT) {
             studentId = txtStudentIDRegister.getText().trim();
-            String yearStr = (String) cmbAnnoCorso.getSelectedItem();
+            String yearStr = (String) cmbAnnoCorsoRegister.getSelectedItem();
 
             if (studentId.isEmpty() || yearStr == null) {
                 showWarning("Please provide Student ID and Year of Course!");
@@ -184,7 +128,6 @@ public class RegisterFrame extends JFrame {
             if ("First Year".equals(yearStr)) annoCorso = AnnoCorso.PRIMO;
             else if ("Second Year".equals(yearStr)) annoCorso = AnnoCorso.SECONDO;
             else if ("Third Year".equals(yearStr)) annoCorso = AnnoCorso.TERZO;
-
         }
 
         boolean success = controller.register(
@@ -205,7 +148,6 @@ public class RegisterFrame extends JFrame {
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
-
             controller.showLoginFrame();
             dispose();
         } else {
@@ -217,10 +159,6 @@ public class RegisterFrame extends JFrame {
             );
         }
     }
-
-    // =====================================================
-    // HELPER METHODS
-    // =====================================================
 
     private void showWarning(String message) {
         JOptionPane.showMessageDialog(this, message, "Warning", JOptionPane.WARNING_MESSAGE);
@@ -234,10 +172,6 @@ public class RegisterFrame extends JFrame {
         txtPasswordRegister.setText("");
         txtStudentIDRegister.setText("");
         cmbRoleRegister.setSelectedIndex(0);
-        cmbAnnoCorso.setSelectedIndex(0);
-    }
-
-    private void createUIComponents() {
-
+        cmbAnnoCorsoRegister.setSelectedIndex(0);
     }
 }
