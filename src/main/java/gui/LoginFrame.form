@@ -144,7 +144,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="a0608" class="javax.swing.JButton" binding="btnOk">
+          <component id="a0608" class="javax.swing.JButton" binding="btnOkLogin">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="134" height="38"/>
@@ -159,7 +159,7 @@
               <text value="OK"/>
             </properties>
           </component>
-          <component id="5ccb7" class="javax.swing.JButton" binding="btnClear">
+          <component id="5ccb7" class="javax.swing.JButton" binding="btnClearLogin">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="134" height="38"/>
@@ -174,7 +174,7 @@
               <text value="Clear"/>
             </properties>
           </component>
-          <component id="544cd" class="javax.swing.JButton" binding="btnRegister">
+          <component id="544cd" class="javax.swing.JButton" binding="btnRegisterLogin">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="134" height="38"/>
@@ -191,7 +191,7 @@
               <text value="Register"/>
             </properties>
           </component>
-          <component id="57f67" class="javax.swing.JButton" binding="btnExit">
+          <component id="57f67" class="javax.swing.JButton" binding="btnExitLogin">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="134" height="38"/>

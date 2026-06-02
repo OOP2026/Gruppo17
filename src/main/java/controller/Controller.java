@@ -24,44 +24,16 @@ import java.util.Map;
 
 public class Controller {
 
-    // =====================================================
-    // MODEL
-    // =====================================================
-
     private final Orario orario;
-
-    // =====================================================
-    // USERS
-    // =====================================================
-
     private final Map<String, Utente> utenti;
-
-    // =====================================================
-    // SESSION
-    // =====================================================
-
     private Utente utenteCorrente;
-
-    // =====================================================
-    // VIEWS
-    // =====================================================
-
     private LoginFrame loginFrame;
-
     private RegisterFrame registerFrame;
-
-    // =====================================================
-    // CONSTRUCTOR
-    // =====================================================
 
     public Controller() {
         orario = new Orario();
         utenti = new HashMap<>();
     }
-
-    // =====================================================
-    // START APPLICATION
-    // =====================================================
 
     public void startApplication() {
         SwingUtilities.invokeLater(() -> {
@@ -70,25 +42,16 @@ public class Controller {
         });
     }
 
-    // =====================================================
-    // INITIALIZE VIEWS
-    // =====================================================
-
     private void initializeViews() {
         loginFrame = new LoginFrame(this);
         registerFrame = new RegisterFrame(this);
     }
-
-    // =====================================================
-    // SHOW LOGIN FRAME
-    // =====================================================
 
     public void showLoginFrame() {
         SwingUtilities.invokeLater(() -> {
             if (registerFrame != null) {
                 registerFrame.setVisible(false);
             }
-
             if (loginFrame != null) {
                 loginFrame.clearFields();
                 loginFrame.setLocationRelativeTo(null);
@@ -97,16 +60,11 @@ public class Controller {
         });
     }
 
-    // =====================================================
-    // SHOW REGISTER FRAME
-    // =====================================================
-
     public void showRegisterFrame() {
         SwingUtilities.invokeLater(() -> {
             if (loginFrame != null) {
                 loginFrame.setVisible(false);
             }
-
             if (registerFrame != null) {
                 registerFrame.clearFields();
                 registerFrame.setLocationRelativeTo(null);
@@ -115,28 +73,48 @@ public class Controller {
         });
     }
 
-    // =====================================================
-    // OPEN HOME BY ROLE
-    // =====================================================
-
     public void openHomeByRole() {
         UserRole role = getTargetHomeRole();
 
-        if (role == UserRole.STUDENT) {
-            System.out.println("Opening Student Home Screen...");
-
-        } else if (role == UserRole.TEACHER) {
-            System.out.println("Opening Teacher Home Screen...");
-
-        } else if (role == UserRole.ADMIN) {
-            System.out.println("Opening Administrator Home Screen...");
-
+        if (role == UserRole.STUDENT && utenteCorrente instanceof Studente) {
+            StudenteHomeFrame studentFrame = new StudenteHomeFrame(this, (Studente) utenteCorrente);
+            studentFrame.setVisible(true);
+        } else if (role == UserRole.TEACHER && utenteCorrente instanceof Docente) {
+            DocenteHomeFrame docenteFrame = new DocenteHomeFrame(this, (Docente) utenteCorrente);
+            docenteFrame.setVisible(true);
+        } else if (role == UserRole.ADMIN && utenteCorrente instanceof ResponsabileOrari) {
+            ResponsabileHomeFrame adminFrame = new ResponsabileHomeFrame(this, (ResponsabileOrari) utenteCorrente);
+            adminFrame.setVisible(true);
         }
     }
 
-    // =====================================================
-    // FIND USER
-    // =====================================================
+    public List<Lezione> getLezioniForUser(Utente utente) {
+        List<Lezione> filtrate = new ArrayList<>();
+        if (utente == null) {
+            return filtrate;
+        }
+
+        UserRole role = utente.getRole();
+
+        if (role == UserRole.ADMIN) {
+            return orario.getLezioni();
+        } else if (role == UserRole.STUDENT && utente instanceof Studente) {
+            Studente studente = (Studente) utente;
+            for (Lezione l : orario.getLezioni()) {
+                if (l.getInsegnamento().getAnnoCorso() == studente.getAnnoCorso()) {
+                    filtrate.add(l);
+                }
+            }
+        } else if (role == UserRole.TEACHER && utente instanceof Docente) {
+            Docente docente = (Docente) utente;
+            for (Lezione l : orario.getLezioni()) {
+                if (l.getInsegnamento().getDocenteTitolare().equals(docente)) {
+                    filtrate.add(l);
+                }
+            }
+        }
+        return filtrate;
+    }
 
     private Utente findUtenteByLogin(String login) {
         if (login == null) {
@@ -145,17 +123,9 @@ public class Controller {
         return utenti.get(login.toLowerCase().trim());
     }
 
-    // =====================================================
-    // LOGIN EXISTS
-    // =====================================================
-
     private boolean loginExists(String login) {
         return findUtenteByLogin(login) != null;
     }
-
-    // =====================================================
-    // LOGIN
-    // =====================================================
 
     public boolean login(String login, String password) {
         if (login == null || password == null) {
@@ -164,18 +134,12 @@ public class Controller {
 
         Utente utente = findUtenteByLogin(login);
 
-
         if (utente != null && utente.login(login.toLowerCase().trim(), password)) {
             utenteCorrente = utente;
             return true;
         }
-
         return false;
     }
-
-    // =====================================================
-    // REGISTER
-    // =====================================================
 
     public boolean register(
             String name,
@@ -187,7 +151,6 @@ public class Controller {
             String studentId,
             AnnoCorso annoCorso
     ) {
-        // Validation
         if (name == null || surname == null || email == null ||
                 login == null || password == null || role == null) {
             return false;
@@ -195,95 +158,46 @@ public class Controller {
 
         String sanitizedLogin = login.toLowerCase().trim();
 
-        // Login Check
         if (loginExists(sanitizedLogin)) {
             return false;
         }
 
         Utente nuovoUtente = null;
 
-        // STUDENT
         if (role == UserRole.STUDENT) {
-
-            nuovoUtente = new Studente(
-                    name,
-                    surname,
-                    email,
-                    sanitizedLogin,
-                    password,
-                    studentId,
-                    annoCorso
-            );
-        }
-        // TEACHER
-        else if (role == UserRole.TEACHER) {
-            nuovoUtente = new Docente(
-                    name,
-                    surname,
-                    email,
-                    sanitizedLogin,
-                    password
-            );
-        }
-        // ADMIN
-        else if (role == UserRole.ADMIN) {
-            nuovoUtente = new ResponsabileOrari(
-                    name,
-                    surname,
-                    email,
-                    sanitizedLogin,
-                    password
-            );
+            nuovoUtente = new Studente(name, surname, email, sanitizedLogin, password, studentId, annoCorso);
+        } else if (role == UserRole.TEACHER) {
+            nuovoUtente = new Docente(name, surname, email, sanitizedLogin, password);
+        } else if (role == UserRole.ADMIN) {
+            nuovoUtente = new ResponsabileOrari(name, surname, email, sanitizedLogin, password);
         }
 
-        // Save User
         if (nuovoUtente != null) {
             utenti.put(sanitizedLogin, nuovoUtente);
             return true;
         }
-
         return false;
     }
-
-    // =====================================================
-    // LOGOUT
-    // =====================================================
 
     public void logout() {
         utenteCorrente = null;
         showLoginFrame();
     }
 
-    // =====================================================
-    // CURRENT USER
-    // =====================================================
-
     public Utente getUtenteCorrente() {
         return utenteCorrente;
     }
-
-    // =====================================================
-    // SESSION CHECK
-    // =====================================================
 
     public boolean isLogged() {
         return utenteCorrente != null;
     }
 
-    // =====================================================
-    // CURRENT USER ROLE
-    // =====================================================
-
     public UserRole getTargetHomeRole() {
         if (utenteCorrente == null) {
-            return null; // ОНОВЛЕНО: Повертаємо null, бо в енумі немає значення GUEST
+            return null;
         }
         return utenteCorrente.getRole();
     }
-
-    // =====================================================
-    // CURRENT USER NAME
-    // =====================================================
 
     public String getNomeUtenteCorrente() {
         if (utenteCorrente == null) {
@@ -291,10 +205,6 @@ public class Controller {
         }
         return utenteCorrente.getNome() + " " + utenteCorrente.getCognome();
     }
-
-    // =====================================================
-    // CLASSROOMS
-    // =====================================================
 
     public void aggiungiAula(String nomeAula) {
         if (nomeAula == null || nomeAula.isBlank()) {
@@ -319,10 +229,6 @@ public class Controller {
                 .orElse(null);
     }
 
-    // =====================================================
-    // SUBJECTS
-    // =====================================================
-
     public void aggiungiInsegnamento(String nome, int cfu, AnnoCorso annoCorso, Docente docenteTitolare) {
         Insegnamento insegnamento = new Insegnamento(nome, cfu, annoCorso, docenteTitolare);
         orario.aggiungiInsegnamento(insegnamento);
@@ -342,10 +248,6 @@ public class Controller {
                 .findFirst()
                 .orElse(null);
     }
-
-    // =====================================================
-    // CREATE LESSON
-    // =====================================================
 
     public boolean creaLezione(Insegnamento insegnamento, Giorno giorno, LocalTime oraInizio, LocalTime oraFine, Aula aula) {
         if (insegnamento == null || giorno == null || oraInizio == null || oraFine == null || aula == null) {
@@ -368,33 +270,21 @@ public class Controller {
         return orario.aggiungiLezione(lezione);
     }
 
-    // =====================================================
-    // DELETE LESSON
-    // =====================================================
+    public boolean BlacklistLezione(Lezione lezione) {
+        return orario.rimuoviLezione(lezione);
+    }
 
     public boolean eliminaLezione(Lezione lezione) {
         return orario.rimuoviLezione(lezione);
     }
 
-    // =====================================================
-    // GET LESSONS
-    // =====================================================
-
     public List<Lezione> getLezioni() {
         return orario.getLezioni();
     }
 
-    // =====================================================
-    // OVERLAP
-    // =====================================================
-
     private boolean isOverlap(LocalTime start1, LocalTime end1, LocalTime start2, LocalTime end2) {
         return start1.isBefore(end2) && end1.isAfter(start2);
     }
-
-    // =====================================================
-    // CLASSROOM CONFLICT
-    // =====================================================
 
     public boolean checkConflittoAula(Giorno giorno, LocalTime oraInizio, LocalTime oraFine, Aula aula) {
         for (Lezione l : orario.getLezioni()) {
@@ -408,10 +298,6 @@ public class Controller {
         }
         return false;
     }
-
-    // =====================================================
-    // TEACHER CONFLICT
-    // =====================================================
 
     public boolean checkConflittoDocente(Insegnamento insegnamento, Giorno giorno, LocalTime oraInizio, LocalTime oraFine) {
         Docente docenteNuovo = insegnamento.getDocenteTitolare();
@@ -427,10 +313,6 @@ public class Controller {
         }
         return false;
     }
-
-    // =====================================================
-    // SEND REQUEST
-    // =====================================================
 
     public void inviaRichiesta(String motivazione, Giorno giornoAttuale, LocalTime oraInizioAttuale, LocalTime oraFineAttuale, Giorno giornoProposto, LocalTime oraInizioProposta, LocalTime oraFineProposta) {
         if (!(utenteCorrente instanceof Docente docente)) {
@@ -451,17 +333,9 @@ public class Controller {
         orario.aggiungiRichiesta(richiesta);
     }
 
-    // =====================================================
-    // GET REQUESTS
-    // =====================================================
-
     public List<RichiestaSpostamento> getRichieste() {
         return orario.getRichieste();
     }
-
-    // =====================================================
-    // APPROVE REQUEST
-    // =====================================================
 
     public boolean approvaRichiesta(RichiestaSpostamento richiesta) {
         if (!(utenteCorrente instanceof ResponsabileOrari) || richiesta == null) {
@@ -519,10 +393,6 @@ public class Controller {
         return true;
     }
 
-    // =====================================================
-    // REJECT REQUEST
-    // =====================================================
-
     public void rifiutaRichiesta(RichiestaSpostamento richiesta) {
         if (!(utenteCorrente instanceof ResponsabileOrari) || richiesta == null) {
             return;
@@ -530,17 +400,9 @@ public class Controller {
         richiesta.setStato(StatoRichiesta.RIFIUTATA);
     }
 
-    // =====================================================
-    // FULL TIMETABLE
-    // =====================================================
-
     public Object[][] getDatiTabellaOrario() {
         return buildTabellaLezioni(orario.getLezioni());
     }
-
-    // =====================================================
-    // STUDENT TIMETABLE
-    // =====================================================
 
     public Object[][] getDatiTabellaOrarioStudente() {
         if (!(utenteCorrente instanceof Studente studente)) {
@@ -558,10 +420,6 @@ public class Controller {
         return buildTabellaLezioni(filtrate);
     }
 
-    // =====================================================
-    // TEACHER TIMETABLE
-    // =====================================================
-
     public Object[][] getDatiTabellaOrarioDocente() {
         if (!(utenteCorrente instanceof Docente docente)) {
             return null;
@@ -577,10 +435,6 @@ public class Controller {
 
         return buildTabellaLezioni(filtrate);
     }
-
-    // =====================================================
-    // BUILD LESSON TABLE
-    // =====================================================
 
     private Object[][] buildTabellaLezioni(List<Lezione> lezioni) {
         Object[][] dati = new Object[lezioni.size()][6];
@@ -598,10 +452,6 @@ public class Controller {
 
         return dati;
     }
-
-    // =====================================================
-    // REQUEST TABLE
-    // =====================================================
 
     public Object[][] getDatiTabellaRichieste() {
         List<RichiestaSpostamento> richieste = orario.getRichieste();
