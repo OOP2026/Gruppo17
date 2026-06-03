@@ -1,13 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.RichiestaSpostamentoPanel">
-  <grid id="27dc6" row-count="1" column-count="1" layout-manager="GridBagLayout">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="mainPanelSpostamento" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="20" left="20" bottom="20" right="20"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+      <xy x="20" y="20" width="588" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-1314568"/>
+    </properties>
     <border type="none"/>
-    <children/>
+    <children>
+      <component id="7445a" class="javax.swing.JLabel" binding="lblTitleSpostamento">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Segoe UI" size="24" style="1"/>
+          <foreground color="-14796193"/>
+          <text value="Request Lesson Rescheduling"/>
+        </properties>
+      </component>
+      <grid id="abc8f" binding="formPanelSpostamento" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="20" left="20" bottom="20" right="20"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-13812134"/>
+          <foreground color="-13812134"/>
+          <opaque value="true"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="fdb23" class="javax.swing.JLabel" binding="lblLezioneSpostamento">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Select your Lesson:"/>
+            </properties>
+          </component>
+          <component id="c0c7e" class="javax.swing.JComboBox" binding="cmbLezioneSpostamento">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <font name="Segoe UI" size="14" style="0"/>
+              <foreground color="-13812134"/>
+              <model/>
+            </properties>
+          </component>
+          <component id="1d5cd" class="javax.swing.JLabel" binding="lblNewDaySpostamento">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Proposed New Day:"/>
+            </properties>
+          </component>
+          <component id="b511b" class="javax.swing.JLabel" binding="lblNewTimeSpostamento">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Proposed Start Time:"/>
+            </properties>
+          </component>
+          <component id="76320" class="javax.swing.JLabel" binding="lblMotivationSpostamento">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Segoe UI" size="16" style="1"/>
+              <foreground color="-1"/>
+              <text value="Motivation:"/>
+            </properties>
+          </component>
+          <component id="19d86" class="javax.swing.JComboBox" binding="cmbNewTimeSpostamento">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <font name="Segoe UI" size="14" style="0"/>
+              <foreground color="-13812134"/>
+              <model/>
+            </properties>
+          </component>
+          <component id="a9d48" class="javax.swing.JTextArea" binding="textMotivationSpostamento">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1314568"/>
+              <font name="Segoe UI" size="14" style="0"/>
+              <foreground color="-13812134"/>
+              <lineWrap value="true"/>
+              <wrapStyleWord value="true"/>
+            </properties>
+          </component>
+          <component id="ab619" class="javax.swing.JComboBox" binding="cmbNewDaySpostamento">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <font name="Segoe UI" size="14" style="0"/>
+              <foreground color="-13812134"/>
+              <model/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="97132" class="javax.swing.JButton" binding="btnSubmitSpostamento">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="134" height="38"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-11108935"/>
+          <enabled value="true"/>
+          <font name="Segoe UI" size="14" style="1"/>
+          <foreground color="-1"/>
+          <label value="Submit Request"/>
+          <text value="Submit Request"/>
+        </properties>
+      </component>
+      <component id="c5c62" class="javax.swing.JButton" binding="btnAnnullaSpostamento">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="134" height="38"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-11108935"/>
+          <enabled value="true"/>
+          <font name="Segoe UI" size="14" style="1"/>
+          <foreground color="-1"/>
+          <text value="Cancel"/>
+        </properties>
+      </component>
+    </children>
   </grid>
 </form>

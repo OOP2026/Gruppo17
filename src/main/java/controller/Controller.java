@@ -3,6 +3,7 @@ package controller;
 import gui.*;
 import model.didattica.AnnoCorso;
 import model.didattica.Giorno;
+import model.didattica.OraInizio;
 import model.didattica.Insegnamento;
 import model.didattica.Lezione;
 import model.didattica.Orario;
@@ -16,7 +17,6 @@ import model.utente.UserRole;
 import model.utente.Utente;
 
 import javax.swing.*;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -249,24 +249,20 @@ public class Controller {
                 .orElse(null);
     }
 
-    public boolean creaLezione(Insegnamento insegnamento, Giorno giorno, LocalTime oraInizio, LocalTime oraFine, Aula aula) {
-        if (insegnamento == null || giorno == null || oraInizio == null || oraFine == null || aula == null) {
+    public boolean creaLezione(Insegnamento insegnamento, Giorno giorno, OraInizio oraInizio, Aula aula) {
+        if (insegnamento == null || giorno == null || oraInizio == null || aula == null) {
             return false;
         }
 
-        if (oraInizio.isAfter(oraFine) || oraInizio.equals(oraFine)) {
+        if (checkConflittoAula(giorno, oraInizio, aula)) {
             return false;
         }
 
-        if (checkConflittoAula(giorno, oraInizio, oraFine, aula)) {
+        if (checkConflittoDocente(insegnamento, giorno, oraInizio)) {
             return false;
         }
 
-        if (checkConflittoDocente(insegnamento, giorno, oraInizio, oraFine)) {
-            return false;
-        }
-
-        Lezione lezione = new Lezione(insegnamento, giorno, oraInizio, oraFine, aula);
+        Lezione lezione = new Lezione(insegnamento, giorno, oraInizio, aula);
         return orario.aggiungiLezione(lezione);
     }
 
@@ -282,55 +278,35 @@ public class Controller {
         return orario.getLezioni();
     }
 
-    private boolean isOverlap(LocalTime start1, LocalTime end1, LocalTime start2, LocalTime end2) {
-        return start1.isBefore(end2) && end1.isAfter(start2);
-    }
-
-    public boolean checkConflittoAula(Giorno giorno, LocalTime oraInizio, LocalTime oraFine, Aula aula) {
+    public boolean checkConflittoAula(Giorno giorno, OraInizio oraInizio, Aula aula) {
         for (Lezione l : orario.getLezioni()) {
-            boolean stessoGiorno = l.getGiornoSettimana() == giorno;
-            boolean stessaAula = l.getAula().equals(aula);
-            boolean overlap = isOverlap(oraInizio, oraFine, l.getOraInizio(), l.getOraFine());
-
-            if (stessoGiorno && stessaAula && overlap) {
+            if (l.getGiornoSettimana() == giorno && l.getAula().equals(aula) && l.getOraInizio() == oraInizio) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean checkConflittoDocente(Insegnamento insegnamento, Giorno giorno, LocalTime oraInizio, LocalTime oraFine) {
+    public boolean checkConflittoDocente(Insegnamento insegnamento, Giorno giorno, OraInizio oraInizio) {
         Docente docenteNuovo = insegnamento.getDocenteTitolare();
 
         for (Lezione l : orario.getLezioni()) {
             boolean stessoGiorno = l.getGiornoSettimana() == giorno;
             boolean stessoDocente = l.getInsegnamento().getDocenteTitolare().equals(docenteNuovo);
-            boolean overlap = isOverlap(oraInizio, oraFine, l.getOraInizio(), l.getOraFine());
+            boolean stessaOra = l.getOraInizio() == oraInizio;
 
-            if (stessoGiorno && stessoDocente && overlap) {
+            if (stessoGiorno && stessoDocente && stessaOra) {
                 return true;
             }
         }
         return false;
     }
 
-    public void inviaRichiesta(String motivazione, Giorno giornoAttuale, LocalTime oraInizioAttuale, LocalTime oraFineAttuale, Giorno giornoProposto, LocalTime oraInizioProposta, LocalTime oraFineProposta) {
-        if (!(utenteCorrente instanceof Docente docente)) {
-            return;
+    public boolean inviaRichiestaSpostamento(RichiestaSpostamento richiesta) {
+        if (richiesta == null) {
+            return false;
         }
-
-        RichiestaSpostamento richiesta = new RichiestaSpostamento(
-                docente,
-                motivazione,
-                giornoAttuale,
-                oraInizioAttuale,
-                oraFineAttuale,
-                giornoProposto,
-                oraInizioProposta,
-                oraFineProposta
-        );
-
-        orario.aggiungiRichiesta(richiesta);
+        return orario.aggiungiRichiesta(richiesta);
     }
 
     public List<RichiestaSpostamento> getRichieste() {
@@ -347,7 +323,7 @@ public class Controller {
         for (Lezione l : orario.getLezioni()) {
             boolean stessoDocente = l.getInsegnamento().getDocenteTitolare().equals(richiesta.getDocente());
             boolean stessoGiorno = l.getGiornoSettimana() == richiesta.getGiornoAttuale();
-            boolean stessaOra = l.getOraInizio().equals(richiesta.getOraInizioAttuale());
+            boolean stessaOra = l.getOraInizio() == richiesta.getOraInizioAttuale();
 
             if (stessoDocente && stessoGiorno && stessaOra) {
                 lezioneDaSpostare = l;
@@ -359,21 +335,11 @@ public class Controller {
             return false;
         }
 
-        if (checkConflittoAula(
-                richiesta.getGiornoProposto(),
-                richiesta.getOraInizioProposta(),
-                richiesta.getOraFineProposta(),
-                lezioneDaSpostare.getAula()
-        )) {
+        if (checkConflittoAula(richiesta.getGiornoProposto(), richiesta.getOraInizioProposta(), lezioneDaSpostare.getAula())) {
             return false;
         }
 
-        if (checkConflittoDocente(
-                lezioneDaSpostare.getInsegnamento(),
-                richiesta.getGiornoProposto(),
-                richiesta.getOraInizioProposta(),
-                richiesta.getOraFineProposta()
-        )) {
+        if (checkConflittoDocente(lezioneDaSpostare.getInsegnamento(), richiesta.getGiornoProposto(), richiesta.getOraInizioProposta())) {
             return false;
         }
 
@@ -383,7 +349,6 @@ public class Controller {
                 lezioneDaSpostare.getInsegnamento(),
                 richiesta.getGiornoProposto(),
                 richiesta.getOraInizioProposta(),
-                richiesta.getOraFineProposta(),
                 lezioneDaSpostare.getAula()
         );
 
@@ -460,7 +425,7 @@ public class Controller {
         for (int i = 0; i < richieste.size(); i++) {
             RichiestaSpostamento r = richieste.get(i);
 
-            dati[i][0] = r.getDocente().getCognome() + " " + r.getDocente().getNome();
+            dati[i][0] = r.getDocente() != null ? r.getDocente().getCognome() + " " + r.getDocente().getNome() : "Unknown";
             dati[i][1] = r.getMotivazione();
             dati[i][2] = r.getStato();
             dati[i][3] = r.getGiornoAttuale() + " (" + r.getOraInizioAttuale() + ")";

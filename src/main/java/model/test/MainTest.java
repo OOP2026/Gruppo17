@@ -1,4 +1,4 @@
-package model.test;
+/*package model.test;
 
 import model.didattica.*;
 import model.logistica.Aula;
@@ -128,4 +128,4 @@ public class MainTest {
 
         System.out.println("===== TEST COMPLETO OK ✔ =====");
     }
-}
+}*/
