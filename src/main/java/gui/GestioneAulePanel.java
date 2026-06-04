@@ -1,77 +1,115 @@
 package gui;
 
 import controller.Controller;
-import model.Aula;
+import model.logistica.Aula;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
-public class GestioneAulePanel extends JPanel {
+public class GestioneAulePanel extends JFrame {
 
+    // Елементи, які автоматично зв'язуються з GUI Designer (.form)
+    private JPanel mainPanelAule;
+    private JLabel lblTitleAule;
+    private JPanel addPanelAule;
+    private JLabel lblNewAula;
     private JTextField txtNomeAula;
-    private JTextField txtCapienza;
-    private JButton btnAggiungi;
+    private JButton btnAddAule; // Точна назва з твого GUI
+    private JPanel viewPanelAule;
+    private JLabel lblExistingAule;
+    private JScrollPane scrollPanelAule; // Точна назва з твого GUI
     private JList<Aula> listAule;
-    private DefaultListModel<Aula> listModel;
+    private JButton btnBackAule;
 
-    public GestioneAulePanel() {
-        setLayout(new BorderLayout(10, 10));
-        initComponents();
-        caricaAule();
+    // Логічні змінні класу
+    private final DefaultListModel<Aula> listModel;
+    private final Controller controller;
+    private final JFrame parentFrame;
+
+    public GestioneAulePanel(Controller controller, JFrame parentFrame) {
+        this.controller = controller;
+        this.parentFrame = parentFrame;
+        this.listModel = new DefaultListModel<>();
+
+        // Налаштування контейнера вікна
+        setContentPane(mainPanelAule);
+        setTitle("Manage Classrooms");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        // Підв'язуємо динамічну модель даних до JList
+        listAule.setModel(listModel);
+
+        // Завантажуємо наявні аудиторії та задаємо стилі
+        updateClassroomList();
+        setupStyles();
+
+        // Лісенер для додавання нової аудиторії
+        btnAddAule.addActionListener(e -> processAddAula());
+
+        // Лісенер для повернення назад у головне меню
+        btnBackAule.addActionListener(e -> {
+            parentFrame.setVisible(true);
+            dispose();
+        });
+
+        // Пакуємо та центруємо вікно на екрані
+        pack();
+        setLocationRelativeTo(null);
     }
 
-    private void initComponents() {
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        topPanel.add(new JLabel("Nome Aula:"));
-        txtNomeAula = new JTextField(15);
-        topPanel.add(txtNomeAula);
-
-        topPanel.add(new JLabel("Capienza:"));
-        txtCapienza = new JTextField(8);
-        topPanel.add(txtCapienza);
-
-        btnAggiungi = new JButton("Aggiungi Aula");
-        topPanel.add(btnAggiungi);
-
-        add(topPanel, BorderLayout.NORTH);
-
-        listModel = new DefaultListModel<>();
-        listAule = new JList<>(listModel);
-        add(new JScrollPane(listAule), BorderLayout.CENTER);
-
-        btnAggiungi.addActionListener(e -> aggiungiAula());
-    }
-
-    private void caricaAule() {
+    // Метод для оновлення списку аудиторій з контролера
+    private void updateClassroomList() {
         listModel.clear();
-        Controller.getInstance().getAuleDisponibili().forEach(listModel::addElement);
+        List<Aula> auleSistema = controller.getTutteAule();
+        if (auleSistema != null) {
+            for (Aula aula : auleSistema) {
+                listModel.addElement(aula);
+            }
+        }
     }
 
-    private void aggiungiAula() {
-        String nome = txtNomeAula.getText().trim();
-        String capienzaStr = txtCapienza.getText().trim();
+    // Логіка обробки натискання на кнопку "Add Classroom"
+    private void processAddAula() {
+        String nomeAula = txtNomeAula.getText().trim();
 
-        if (nome.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Inserisci il nome dell'aula!", "Errore", JOptionPane.WARNING_MESSAGE);
+        if (nomeAula.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a classroom name.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int capienza = 0;
-        if (!capienzaStr.isEmpty()) {
-            try {
-                capienza = Integer.parseInt(capienzaStr);
-                if (capienza <= 0) throw new NumberFormatException();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "La capienza deve essere un numero intero positivo!", "Errore", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-        }
+        try {
+            Aula nuovaAula = new Aula(nomeAula);
+            boolean success = controller.aggiungiAula(nuovaAula);
 
-        Controller.getInstance().aggiungiAula(nome, capienza);
-        JOptionPane.showMessageDialog(this, "Aula '" + nome + "' aggiunta con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-        txtNomeAula.setText("");
-        txtCapienza.setText("");
-        caricaAule();
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Classroom added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                txtNomeAula.setText("");
+                updateClassroomList();
+            } else {
+                JOptionPane.showMessageDialog(this, "A classroom with this name already exists.", "Duplicate Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Кастомізація зовнішнього вигляду компонентів під твою палітру
+    private void setupStyles() {
+        btnAddAule.setBackground(new Color(45, 62, 90));
+        btnAddAule.setForeground(Color.WHITE);
+        btnAddAule.setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+        btnBackAule.setBackground(new Color(86, 125, 185));
+        btnBackAule.setForeground(Color.WHITE);
+        btnBackAule.setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+        lblTitleAule.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        lblTitleAule.setForeground(new Color(45, 62, 90));
+
+        listAule.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        listAule.setSelectionBackground(new Color(45, 62, 90));
+        listAule.setSelectionForeground(Color.WHITE);
     }
 }

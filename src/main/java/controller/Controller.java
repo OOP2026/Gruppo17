@@ -206,12 +206,20 @@ public class Controller {
         return utenteCorrente.getNome() + " " + utenteCorrente.getCognome();
     }
 
-    public void aggiungiAula(String nomeAula) {
-        if (nomeAula == null || nomeAula.isBlank()) {
-            return;
+    public boolean aggiungiAula(Aula aula) {
+        if (aula == null) {
+            return false;
         }
-        Aula aula = new Aula(nomeAula.trim());
-        orario.aggiungiAula(aula);
+        boolean esiste = orario.getAule().stream()
+                .anyMatch(a -> a.getNomeAula().equalsIgnoreCase(aula.getNomeAula()));
+        if (esiste) {
+            return false;
+        }
+        return orario.aggiungiAula(aula);
+    }
+
+    public List<Aula> getTutteAule() {
+        return orario.getAule();
     }
 
     public List<Aula> getAule() {

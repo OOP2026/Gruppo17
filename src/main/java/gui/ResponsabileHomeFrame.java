@@ -77,7 +77,7 @@ public class ResponsabileHomeFrame extends JFrame {
         });
 
         btnRichiesteResponsabile.addActionListener(e -> {
-            RichiestePanel richiesteFrame = new RichiestePanel(controller, responsabile, this);
+            GestioneAulePanel richiesteFrame = new GestioneAulePanel(controller, responsabile, this);
             richiesteFrame.setVisible(true);
             this.setVisible(false);
         });
