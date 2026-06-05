@@ -19,14 +19,16 @@ public class LoginFrame extends JFrame {
     private JPasswordField txtPasswordLogin;
 
     private JPanel buttonPanelLogin;
-    private JButton btnOk;
-    private JButton btnClear;
-    private JButton btnRegister;
-    private JButton btnExit;
+    private JButton btnOkLogin;
+    private JButton btnClearLogin;
+    private JButton btnRegisterLogin;
+    private JButton btnExitLogin;
 
     private final Controller controller;
 
+
     public LoginFrame(Controller controller) {
+
         this.controller = controller;
 
         setContentPane(mainPanelLogin);
@@ -42,7 +44,9 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+
     private void initializeComboBox() {
+
         cmbRoleLogin.removeAllItems();
         cmbRoleLogin.addItem("Student");
         cmbRoleLogin.addItem("Teacher");
@@ -50,19 +54,28 @@ public class LoginFrame extends JFrame {
         cmbRoleLogin.setSelectedIndex(0);
     }
 
+
     private void initializeListeners() {
-        btnOk.addActionListener(e -> login());
-        btnClear.addActionListener(e -> clearFields());
-        btnRegister.addActionListener(e -> controller.showRegisterFrame());
-        btnExit.addActionListener(e -> System.exit(0));
+
+        btnOkLogin.addActionListener(e -> login());
+
+        btnClearLogin.addActionListener(e -> clearFields());
+
+        btnRegisterLogin.addActionListener(e -> controller.showRegisterFrame());
+
+        btnExitLogin.addActionListener(e -> System.exit(0));
     }
 
+
     private void login() {
+
         String login = txtLoginLogin.getText().trim();
         String password = String.valueOf(txtPasswordLogin.getPassword());
         String selectedRole = (String) cmbRoleLogin.getSelectedItem();
 
+
         if (login.isEmpty() || password.isEmpty()) {
+
             JOptionPane.showMessageDialog(
                     this,
                     "Fields cannot be empty!",
@@ -72,27 +85,34 @@ public class LoginFrame extends JFrame {
             return;
         }
 
+
         boolean success = controller.login(login, password);
 
+
         if (success) {
+
             UserRole actualRole = controller.getTargetHomeRole();
             boolean roleMatches = false;
 
             if ("Student".equals(selectedRole) && actualRole == UserRole.STUDENT) {
                 roleMatches = true;
+
             } else if ("Teacher".equals(selectedRole) && actualRole == UserRole.TEACHER) {
                 roleMatches = true;
+
             } else if ("Administrator".equals(selectedRole) && actualRole == UserRole.ADMIN) {
                 roleMatches = true;
             }
 
             if (!roleMatches) {
+
                 JOptionPane.showMessageDialog(
                         this,
                         "Selected role does not match this user account type!",
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                 );
+
                 controller.logout();
                 return;
             }
@@ -106,18 +126,23 @@ public class LoginFrame extends JFrame {
 
             controller.openHomeByRole();
             dispose();
+
         } else {
+
             JOptionPane.showMessageDialog(
                     this,
                     "Wrong login or password!",
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
+
             txtPasswordLogin.setText("");
         }
     }
 
+
     public void clearFields() {
+
         txtLoginLogin.setText("");
         txtPasswordLogin.setText("");
         cmbRoleLogin.setSelectedIndex(0);

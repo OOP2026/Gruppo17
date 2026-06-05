@@ -1,71 +1,49 @@
 package model.utente;
 
-import model.didattica.Orario;
 import model.richiesta.RichiestaSpostamento;
 import model.richiesta.StatoRichiesta;
 
 public class ResponsabileOrari extends Docente {
 
-    // Costruttore
-    public ResponsabileOrari(String nome,
-                             String cognome,
-                             String email,
-                             String login,
-                             String password) {
+    // Costruttore principale per il responsabile degli orari (Admin)
+    public ResponsabileOrari(
+            String nome,
+            String cognome,
+            String email,
+            String login,
+            String password
+    ) {
 
         super(nome, cognome, email, login, password, UserRole.ADMIN);
     }
 
-    // Approvazione richiesta
+
+    // Metodo per approvare la richiesta di spostamento della lezione
     public void approvaRichiesta(RichiestaSpostamento richiesta) {
 
-        if(richiesta == null) {
-
-            System.out.println("Errore: richiesta non valida.");
-            return;
+        if (richiesta == null) {
+            throw new IllegalArgumentException("La richiesta non può essere nulla.");
         }
 
         richiesta.setStato(StatoRichiesta.APPROVATA);
-
-        System.out.println("Richiesta approvata dal responsabile: "
-                + getNome() + " " + getCognome());
     }
 
-    // Rifiuto richiesta
+
+    // Metodo per rifiutare la richiesta di spostamento della lezione
     public void rifiutaRichiesta(RichiestaSpostamento richiesta) {
 
-        if(richiesta == null) {
-
-            System.out.println("Errore: richiesta non valida.");
-            return;
+        if (richiesta == null) {
+            throw new IllegalArgumentException("La richiesta non può essere nulla.");
         }
 
         richiesta.setStato(StatoRichiesta.RIFIUTATA);
-
-        System.out.println("Richiesta rifiutata dal responsabile: "
-                + getNome() + " " + getCognome());
     }
 
-    // Aggiornamento orario
-    public void aggiornaOrario(Orario orario) {
 
-        if(orario == null) {
-
-            System.out.println("Errore: orario non valido.");
-            return;
-        }
-
-        System.out.println("Orario aggiornato correttamente.");
-    }
-
-    // toString
+    // Metodo toString per la rappresentazione testuale del responsabile
     @Override
     public String toString() {
 
-        return "ResponsabileOrari{" +
-                "nome='" + getNome() + '\'' +
-                ", cognome='" + getCognome() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                '}';
+        return getNome() + " " + getCognome() + " (Responsabile Orari)";
     }
 }

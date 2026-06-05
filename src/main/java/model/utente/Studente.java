@@ -7,14 +7,17 @@ public class Studente extends Utente {
     private String matricola;
     private AnnoCorso annoCorso;
 
-    // Costruttore
-    public Studente(String nome,
-                    String cognome,
-                    String email,
-                    String login,
-                    String password,
-                    String matricola,
-                    AnnoCorso annoCorso) {
+
+    // Costruttore principale per lo studente
+    public Studente(
+            String nome,
+            String cognome,
+            String email,
+            String login,
+            String password,
+            String matricola,
+            AnnoCorso annoCorso
+    ) {
 
         super(nome, cognome, email, login, password, UserRole.STUDENT);
 
@@ -22,42 +25,41 @@ public class Studente extends Utente {
         this.annoCorso = annoCorso;
     }
 
-    // Override del metodo astratto
-    @Override
-    public void visualizzaOrario() {
 
-        System.out.println("Visualizzazione orario dello studente: "
-                + getNome() + " " + getCognome());
-
-        System.out.println("Anno di corso: " + annoCorso);
-    }
-
-    // Getter
+    // Getter per la matricola
     public String getMatricola() {
+
         return matricola;
     }
 
+
+    // Setter per la matricola
+    public void setMatricola(String matricola) {
+
+        this.matricola = matricola;
+    }
+
+
+    // Getter per l'anno di corso
     public AnnoCorso getAnnoCorso() {
+
         return annoCorso;
     }
 
-    // Setter
+
+    // Setter per l'anno di corso con validazione
     public void setAnnoCorso(AnnoCorso annoCorso) {
 
-        if(annoCorso != null) {
+        if (annoCorso != null) {
             this.annoCorso = annoCorso;
         }
     }
 
-    // toString
+
+    // Metodo toString per la rappresentazione testuale dello studente
     @Override
     public String toString() {
 
-        return "Studente{" +
-                "nome='" + getNome() + '\'' +
-                ", cognome='" + getCognome() + '\'' +
-                ", matricola='" + matricola + '\'' +
-                ", annoCorso=" + annoCorso +
-                '}';
+        return getNome() + " " + getCognome() + " (Matr: " + matricola + ")";
     }
 }

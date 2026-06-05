@@ -36,7 +36,9 @@ public class RegisterFrame extends JFrame {
 
     private final Controller controller;
 
+
     public RegisterFrame(Controller controller) {
+
         this.controller = controller;
 
         setContentPane(mainPanelRegister);
@@ -53,7 +55,9 @@ public class RegisterFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+
     private void initializeComboBoxes() {
+
         cmbRoleRegister.removeAllItems();
         cmbRoleRegister.addItem("Student");
         cmbRoleRegister.addItem("Teacher");
@@ -67,7 +71,9 @@ public class RegisterFrame extends JFrame {
         cmbAnnoCorsoRegister.setSelectedIndex(0);
     }
 
+
     private void initializeListeners() {
+
         cmbRoleRegister.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 toggleStudentFields();
@@ -75,10 +81,13 @@ public class RegisterFrame extends JFrame {
         });
 
         btnRegister.addActionListener(e -> register());
+
         btnBackRegister.addActionListener(e -> controller.showLoginFrame());
     }
 
+
     private void toggleStudentFields() {
+
         String selectedRole = (String) cmbRoleRegister.getSelectedItem();
         boolean isStudent = "Student".equals(selectedRole);
 
@@ -91,7 +100,9 @@ public class RegisterFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+
     private void register() {
+
         String name = txtNameRegister.getText().trim();
         String surname = txtSurnameRegister.getText().trim();
         String email = txtEmailRegister.getText().trim();
@@ -99,14 +110,18 @@ public class RegisterFrame extends JFrame {
         String password = String.valueOf(txtPasswordRegister.getPassword());
         String roleStr = (String) cmbRoleRegister.getSelectedItem();
 
+
         if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || login.isEmpty() || password.isEmpty()) {
+
             showWarning("All standard fields must be filled!");
             return;
         }
 
+
         UserRole role = null;
         AnnoCorso annoCorso = null;
         String studentId = null;
+
 
         if ("Student".equals(roleStr)) {
             role = UserRole.STUDENT;
@@ -116,19 +131,27 @@ public class RegisterFrame extends JFrame {
             role = UserRole.ADMIN;
         }
 
+
         if (role == UserRole.STUDENT) {
+
             studentId = txtStudentIDRegister.getText().trim();
             String yearStr = (String) cmbAnnoCorsoRegister.getSelectedItem();
 
             if (studentId.isEmpty() || yearStr == null) {
+
                 showWarning("Please provide Student ID and Year of Course!");
                 return;
             }
 
-            if ("First Year".equals(yearStr)) annoCorso = AnnoCorso.PRIMO;
-            else if ("Second Year".equals(yearStr)) annoCorso = AnnoCorso.SECONDO;
-            else if ("Third Year".equals(yearStr)) annoCorso = AnnoCorso.TERZO;
+            if ("First Year".equals(yearStr)) {
+                annoCorso = AnnoCorso.PRIMO;
+            } else if ("Second Year".equals(yearStr)) {
+                annoCorso = AnnoCorso.SECONDO;
+            } else if ("Third Year".equals(yearStr)) {
+                annoCorso = AnnoCorso.TERZO;
+            }
         }
+
 
         boolean success = controller.register(
                 name,
@@ -141,16 +164,21 @@ public class RegisterFrame extends JFrame {
                 annoCorso
         );
 
+
         if (success) {
+
             JOptionPane.showMessageDialog(
                     this,
                     "Registration successful! You can now log in.",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
+
             controller.showLoginFrame();
             dispose();
+
         } else {
+
             JOptionPane.showMessageDialog(
                     this,
                     "Registration failed! Login might already be taken.",
@@ -160,17 +188,22 @@ public class RegisterFrame extends JFrame {
         }
     }
 
+
     private void showWarning(String message) {
+
         JOptionPane.showMessageDialog(this, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
+
     public void clearFields() {
+
         txtNameRegister.setText("");
         txtSurnameRegister.setText("");
         txtEmailRegister.setText("");
         txtLoginRegister.setText("");
         txtPasswordRegister.setText("");
         txtStudentIDRegister.setText("");
+
         cmbRoleRegister.setSelectedIndex(0);
         cmbAnnoCorsoRegister.setSelectedIndex(0);
     }

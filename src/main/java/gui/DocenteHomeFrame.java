@@ -28,12 +28,15 @@ public class DocenteHomeFrame extends JFrame {
     private final Controller controller;
     private final Docente docente;
 
+
     public DocenteHomeFrame(Controller controller, Docente docente) {
+
         this.controller = controller;
         this.docente = docente;
 
         setContentPane(mainPanelDocente);
         setTitle("University Timetable Manager - Teacher Area");
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -44,32 +47,49 @@ public class DocenteHomeFrame extends JFrame {
         setLocationRelativeTo(null);
     }
 
+
     private void fillDocenteData() {
+
         if (docente != null) {
+
             txtSurnameDocente.setText(docente.getCognome());
+            txtSurnameDocente.setEditable(false);
+
             txtNameDocente.setText(docente.getNome());
+            txtNameDocente.setEditable(false);
+
             txtEmailDocente.setText(docente.getEmail());
+            txtEmailDocente.setEditable(false);
+
             txtLoginDocente.setText(docente.getLogin());
+            txtLoginDocente.setEditable(false);
         }
     }
 
+
     private void initializeListeners() {
+
         btnVisualizzaOrarioDocente.addActionListener(e -> {
-            docente.visualizzaOrario();
+
             VisualizzaOrarioFrame orarioFrame = new VisualizzaOrarioFrame(controller, docente, this);
             orarioFrame.setVisible(true);
+
             this.setVisible(false);
         });
+
 
         btnInviaRichiestaDocente.addActionListener(e -> {
-            RichiestaSpostamentoFrame richiestaFrame = new RichiestaSpostamentoFrame(controller, docente, this);
+
+            RichiestaSpostamentoPanel richiestaFrame = new RichiestaSpostamentoPanel(controller, docente, this);
             richiestaFrame.setVisible(true);
+
             this.setVisible(false);
         });
 
+
         btnBackToLoginDocente.addActionListener(e -> {
+
             controller.logout();
-            controller.showLoginFrame();
             dispose();
         });
     }

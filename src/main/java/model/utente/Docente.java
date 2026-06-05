@@ -1,97 +1,66 @@
 package model.utente;
 
 import model.didattica.Giorno;
+import model.didattica.OraInizio;
 import model.richiesta.RichiestaSpostamento;
-
-import java.time.LocalTime;
 
 public class Docente extends Utente {
 
-    // Costruttore principale
-    public Docente(String nome,
-                   String cognome,
-                   String email,
-                   String login,
-                   String password) {
-
+    // Costruttore principale per il docente standard
+    public Docente(
+            String nome,
+            String cognome,
+            String email,
+            String login,
+            String password
+    ) {
 
         super(nome, cognome, email, login, password, UserRole.TEACHER);
     }
 
-    protected Docente(String nome,
-                      String cognome,
-                      String email,
-                      String login,
-                      String password,
-                      UserRole role) {
+
+    // Costruttore protetto per permettere a ResponsabileOrari di ereditare correttamente
+    protected Docente(
+            String nome,
+            String cognome,
+            String email,
+            String login,
+            String password,
+            UserRole role
+    ) {
 
         super(nome, cognome, email, login, password, role);
     }
 
-    // Visualizzazione orario
-    @Override
-    public void visualizzaOrario() {
 
-        System.out.println(
-                "Visualizzazione orario del docente: "
-                        + getNome()
-                        + " "
-                        + getCognome()
-        );
-    }
-
-    // Invio richiesta di spostamento
+    // Metodo per la creazione di una richiesta di spostamento della lezione
     public RichiestaSpostamento inviaRichiesta(
             String motivazione,
             Giorno giornoAttuale,
-            LocalTime oraInizioAttuale,
-            LocalTime oraFineAttuale,
+            OraInizio oraAttuale,
             Giorno giornoProposto,
-            LocalTime oraInizioProposta,
-            LocalTime oraFineProposta) {
+            OraInizio oraProposta
+    ) {
 
-        // Validazione motivazione
-        if (motivazione == null
-                || motivazione.trim().isEmpty()) {
-
-            System.out.println(
-                    "Errore: motivazione non valida."
-            );
-
-            return null;
+        if (motivazione == null || motivazione.trim().isEmpty()) {
+            throw new IllegalArgumentException("La motivazione non può essere vuota.");
         }
 
-        // Creazione richiesta
-        RichiestaSpostamento richiesta =
-                new RichiestaSpostamento(
-                        motivazione,
-                        giornoAttuale,
-                        oraInizioAttuale,
-                        oraFineAttuale,
-                        giornoProposto,
-                        oraInizioProposta,
-                        oraFineProposta
-                );
-
-        System.out.println(
-                "Richiesta inviata dal docente: "
-                        + getNome()
-                        + " "
-                        + getCognome()
+        return new RichiestaSpostamento(
+                this,
+                motivazione,
+                giornoAttuale,
+                oraAttuale,
+                giornoProposto,
+                oraProposta
         );
-
-        return richiesta;
     }
 
-    // toString
+
+    // Metodo toString per la rappresentazione testuale dell'oggetto
     @Override
     public String toString() {
 
-        return "Docente{" +
-                "nome='" + getNome() + '\'' +
-                ", cognome='" + getCognome() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", login='" + getLogin() + '\'' +
-                '}';
+        return getNome() + " " + getCognome();
     }
 }

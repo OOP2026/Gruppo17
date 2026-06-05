@@ -17,12 +17,13 @@ public class RichiestaSpostamentoPanel extends JFrame {
     private JPanel mainPanelSpostamento;
     private JLabel lblTitleSpostamento;
     private JPanel formPanelSpostamento;
+    private JLabel lblLezioneSpostamento;
     private JComboBox<Lezione> cmbLezioneSpostamento;
     private JLabel lblNewDaySpostamento;
-    private JLabel lblNewTimeSpostamento;
-    private JLabel lblMotivationSpostamento;
     private JComboBox<Giorno> cmbNewDaySpostamento;
+    private JLabel lblNewTimeSpostamento;
     private JComboBox<OraInizio> cmbNewTimeSpostamento;
+    private JLabel lblMotivationSpostamento;
     private JTextArea textMotivationSpostamento;
     private JButton btnSubmitSpostamento;
     private JButton btnAnnullaSpostamento;
@@ -47,7 +48,6 @@ public class RichiestaSpostamentoPanel extends JFrame {
         setupStyles();
 
         btnSubmitSpostamento.addActionListener(e -> processAndSubmitRequest());
-
         btnAnnullaSpostamento.addActionListener(e -> {
             parentFrame.setVisible(true);
             dispose();
@@ -66,12 +66,12 @@ public class RichiestaSpostamentoPanel extends JFrame {
                 @Override
                 public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                    if (value instanceof Lezione lez) {
+                    if (value instanceof Lezione) {
+                        Lezione lez = (Lezione) value;
                         setText(String.format("%s — %s (%s)",
                                 lez.getInsegnamento().getNomeInsegnamento(),
                                 lez.getGiornoSettimana(),
-                                lez.getOraInizio()
-                        ));
+                                lez.getOraInizio()));
                     }
                     return this;
                 }
@@ -82,14 +82,15 @@ public class RichiestaSpostamentoPanel extends JFrame {
             }
         } else {
             btnSubmitSpostamento.setEnabled(false);
-            JOptionPane.showMessageDialog(this, "No active lessons found for this teacher.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No active lessons found.");
         }
     }
 
     private void setupGiornoComboBox() {
         cmbNewDaySpostamento.removeAllItems();
         for (Giorno g : Giorno.values()) {
-            if (g.disponibilePerLezioni()) {
+            String name = g.name().toUpperCase();
+            if (!name.equals("SABATO") && !name.equals("DOMENICA")) {
                 cmbNewDaySpostamento.addItem(g);
             }
         }
@@ -108,62 +109,37 @@ public class RichiestaSpostamentoPanel extends JFrame {
         Giorno giornoProposto = (Giorno) cmbNewDaySpostamento.getSelectedItem();
         OraInizio oraInizioProposta = (OraInizio) cmbNewTimeSpostamento.getSelectedItem();
 
-        if (selectedLezione == null) {
-            JOptionPane.showMessageDialog(this, "Please select a lesson to reschedule.", "Selection Error", JOptionPane.ERROR_MESSAGE);
+        if (selectedLezione == null || motivazione.isEmpty() || giornoProposto == null || oraInizioProposta == null) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields.");
             return;
         }
 
-        if (motivazione.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "The reason/motivation cannot be empty.", "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        if (!(utente instanceof Docente)) return;
 
-        if (oraInizioProposta == null) {
-            JOptionPane.showMessageDialog(this, "Please select a new start time.", "Selection Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        RichiestaSpostamento nuovaRichiesta = new RichiestaSpostamento(
+                (Docente) utente,
+                motivazione,
+                selectedLezione.getGiornoSettimana(),
+                selectedLezione.getOraInizio(),
+                giornoProposto,
+                oraInizioProposta
+        );
 
-        try {
-            RichiestaSpostamento nuovaRichiesta = new RichiestaSpostamento(
-                    motivazione,
-                    selectedLezione.getGiornoSettimana(),
-                    selectedLezione.getOraInizio(),
-                    giornoProposto,
-                    oraInizioProposta
-            );
-
-            if (utente instanceof Docente) {
-                nuovaRichiesta.setDocente((Docente) utente);
-            }
-
-            boolean success = controller.inviaRichiestaSpostamento(nuovaRichiesta);
-
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Rescheduling request submitted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                parentFrame.setVisible(true);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Failed to submit request. System conflict detected (Room or Teacher busy).", "Schedule Conflict", JOptionPane.ERROR_MESSAGE);
-            }
-
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Business Logic Error", JOptionPane.ERROR_MESSAGE);
+        if (controller.inviaRichiestaSpostamento(nuovaRichiesta)) {
+            JOptionPane.showMessageDialog(this, "Submitted successfully!");
+            parentFrame.setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Conflict detected.");
         }
     }
 
     private void setupStyles() {
         btnSubmitSpostamento.setBackground(new Color(45, 62, 90));
         btnSubmitSpostamento.setForeground(Color.WHITE);
-        btnSubmitSpostamento.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
         btnAnnullaSpostamento.setBackground(new Color(140, 40, 50));
         btnAnnullaSpostamento.setForeground(Color.WHITE);
-        btnAnnullaSpostamento.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
         lblTitleSpostamento.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblTitleSpostamento.setForeground(new Color(45, 62, 90));
-
         textMotivationSpostamento.setLineWrap(true);
-        textMotivationSpostamento.setWrapStyleWord(true);
     }
 }
