@@ -41,7 +41,10 @@ public class CreaLezionePanel extends JFrame {
         setContentPane(mainPanelLezione);
         setTitle("Create Lesson");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         populateComboBoxes();
         setupStyles();

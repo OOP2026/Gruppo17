@@ -38,7 +38,10 @@ public class GestioneAulePanel extends JFrame {
         setContentPane(mainPanelAule);
         setTitle("Manage Classrooms");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         listAule.setModel(listModel);
 
@@ -81,7 +84,6 @@ public class GestioneAulePanel extends JFrame {
 
         try {
 
-            // Викликаємо метод контролера, передаючи назву аудиторії як String
             boolean success = controller.aggiungiAula(nomeAula);
 
             if (success) {

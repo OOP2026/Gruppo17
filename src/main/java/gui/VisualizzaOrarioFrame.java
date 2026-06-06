@@ -46,6 +46,9 @@ public class VisualizzaOrarioFrame extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
 
+        setMinimumSize(new Dimension(950, 520));
+        setPreferredSize(new Dimension(950, 520));
+
         adaptInterfaceByRole();
         setupDynamicFilters();
 
@@ -70,7 +73,6 @@ public class VisualizzaOrarioFrame extends JFrame {
         btnCloseOrario.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         pack();
-        setSize(950, 520);
         setLocationRelativeTo(null);
     }
 

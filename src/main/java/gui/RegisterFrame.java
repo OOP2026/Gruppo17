@@ -5,6 +5,7 @@ import model.didattica.AnnoCorso;
 import model.utente.UserRole;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 
 public class RegisterFrame extends JFrame {
@@ -45,7 +46,10 @@ public class RegisterFrame extends JFrame {
         setTitle("University Timetable Manager - Registration");
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         initializeComboBoxes();
         initializeListeners();

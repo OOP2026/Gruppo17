@@ -4,6 +4,7 @@ import controller.Controller;
 import model.utente.Docente;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class DocenteHomeFrame extends JFrame {
 
@@ -38,7 +39,10 @@ public class DocenteHomeFrame extends JFrame {
         setTitle("University Timetable Manager - Teacher Area");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         fillDocenteData();
         initializeListeners();

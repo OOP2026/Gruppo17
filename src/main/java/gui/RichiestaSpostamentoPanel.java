@@ -40,7 +40,10 @@ public class RichiestaSpostamentoPanel extends JFrame {
         setContentPane(mainPanelSpostamento);
         setTitle("Create Rescheduling Request");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         setupLectureComboBox();
         setupGiornoComboBox();

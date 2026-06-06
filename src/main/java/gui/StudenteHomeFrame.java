@@ -4,6 +4,7 @@ import controller.Controller;
 import model.utente.Studente;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class StudenteHomeFrame extends JFrame {
 
@@ -41,7 +42,10 @@ public class StudenteHomeFrame extends JFrame {
         setTitle("University Timetable Manager - Student Area");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         fillStudentData();
         initializeListeners();
@@ -73,7 +77,6 @@ public class StudenteHomeFrame extends JFrame {
 
             if (studente.getAnnoCorso() != null) {
 
-                // Переписано на класичний синтаксис, сумісний з Java 8 / 11
                 switch (studente.getAnnoCorso()) {
 
                     case PRIMO:

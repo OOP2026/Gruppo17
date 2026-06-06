@@ -40,7 +40,10 @@ public class ResponsabileHomeFrame extends JFrame {
         setTitle("Admin Dashboard");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         loadResponsabileData();
         setupStyles();

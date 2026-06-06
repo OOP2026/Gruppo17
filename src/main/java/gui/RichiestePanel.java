@@ -24,7 +24,6 @@ public class RichiestePanel extends JFrame {
     private final JFrame parentFrame;
     private DefaultTableModel tableModel;
 
-    // ВИПРАВЛЕНО: назва конструктора тепер збігається з назвою класу
     public RichiestePanel(Controller controller, JFrame parentFrame) {
 
         this.controller = controller;
@@ -34,7 +33,10 @@ public class RichiestePanel extends JFrame {
         setTitle("Teacher Requests Management");
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+
+        setMinimumSize(new Dimension(700, 600));
+        setPreferredSize(new Dimension(700, 600));
+        setResizable(true);
 
         setupTable();
         setupStyles();
